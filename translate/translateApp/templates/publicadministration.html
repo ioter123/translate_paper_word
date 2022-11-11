@@ -1,0 +1,248 @@
+{% extends "main_base.html" %}
+
+{% block mobileView %}
+<meta name="viewport" content="width=550, user-scalable=yes">
+{% endblock %}
+
+{% block contents %}
+
+<script>
+  $(document).ready(function () {
+    {% for words in transWords %}
+      {% for w in words.sentence %}
+        $("#search_icon_{{words.word}}_{{forloop.counter}}").click(function (){
+          var tooltip = $("#tooltiptext_{{words.word}}_{{forloop.counter}}");
+          var tool_vis = tooltip.css("visibility");
+          if (tool_vis == "visible") {
+            tooltip.css("visibility", "hidden");
+          } else {
+            tooltip.css("visibility", "visible");
+          }
+        });
+      {% endfor %}
+    {% endfor %}
+  });
+</script>
+<style>
+
+
+</style>
+  <main style="margin-top:5em;">
+    <div class="content_box">
+      <h1 style="font-family: 'Playfair Display', serif; font-weight:300;">Welcome to HAI Researcher's system for writing SSCI articles in Public Administration</h1>
+      <h3>영어 단어 혹은 문장을 아래 빈칸에 입력한 후 Search 버튼을 누르세요.</h3>
+      <hr>
+      <form action="{% url 'home' %}" method="POST">
+        {% csrf_token %}
+        <div class="box1">
+          <!--<input tpye="text" name="startWord" id="startWord" style="text-align:left; width:100%; height:200px;" value="{{startWord}}"/> -->
+          <textarea name="startWord" id="startWord" style="text-align:left; width:100%; height:150px; margin-bottom:10px;">{{ startWord }}</textarea>
+          <input type="submit" style="" value="Search">
+        </div>
+      </form>
+        <!--
+        <div class="box2">
+          <label for="파파고번역">파파고번역</label>
+          <textarea name="papagoWord" id="papagoWord" style="text-align:left; width:100%; height:200px;" readonly>{{papagoWord}}</textarea>
+        </div>
+        -->
+      <div class="box3">
+      <label for="exist_words">논문DB기반 검색</label>
+      <div id="transWord" style="text-align:center; width:100%;">
+        {% if transWords != "" %}
+        <table class="tb">
+          <colgroup>
+            <col width="10%">
+            <col width="10%">
+            <col width="10%">
+            <col width="10%">
+            <col width="10%">
+            <col width="50%">
+          </colgroup>
+          <tr>
+            <th style="font-weight:600;">word</th>
+            <th style="font-weight:600;">synonym</th>
+            <th style="font-weight:600;">synonym_search</th>
+            <th style="font-weight:600;">tag</th>
+            <th style="font-weight:600;">count</th>
+            <th style="font-weight:600;">sentence</th>
+          </tr>
+          <tr>
+            <th><input type="text" class="filter_input"></th>
+            <th><input type="text" class="filter_input"></th>
+            <th>
+              <div class="dropdown-ssc">
+                <button class="dropbtn-ssc filter_input">
+                  <dic class="dropbtn_content_ssc">전체</dic>
+                  <span class="dropbtn_click_ssc" style="font-family: Material Icons; font-size : 16px; color : #3b3b3b; float:right;"
+                    onclick="dropdown_ssc()">arrow_drop_down</span>
+                </button>
+                <div class="dropdown-content-ssc">
+                  <div class="ssc" onclick="showDrop(this.innerText, this)">전체</div>
+                  <div class="ssc" onclick="showDrop(this.innerText, this)">no</div>
+                  <div class="ssc" onclick="showDrop(this.innerText, this)">yes</div>
+                </div>
+              </div>
+            </th>
+            <th>
+              <div class="dropdown-tag">
+                <button class="dropbtn-tag filter_input">
+                  <span class="dropbtn_content_tag">전체</span>
+                  <span class="dropbtn_click_tag" style="font-family: Material Icons; font-size : 16px; color : #3b3b3b; float:right;"
+                    onclick="dropdown_tag()">arrow_drop_down</span>
+                </button>
+                <div class="dropdown-content-tag">
+                  <div class="tag" onclick="showDrop(this.innerText, this)">전체</div>
+                  {% for t in tag1 %}
+                  <div class="tag" onclick="showDrop(this.innerText, this)">{{t}}</div>
+                  {% endfor %}
+                </div>
+              </div>
+
+            </th>
+            <th><input type="text" class="filter_input"></th>
+            <th><input type="text" class="filter_input"></th>
+          </tr>
+            {% for words in transWords %}
+          <tr class="row_word">
+            <td class="word_{{words.word}}" style="text-align: center;">{{words.word}}</td>
+            <td class="word_{{words.word}}" style="text-align: center;">{{words.syn_word}}</td>
+            <td class="ssc_list {{words.syn_search}}" style="text-align: center;">{{words.syn_search}}</td>
+            <td class="tag_list {{words.tag}}" style="text-align: center;">{{words.tag}}</td>
+            <td class="count_{{words.count}}" style="text-align: center;">{{words.count}}번</td>
+            <td>
+              <div class="dropdown">
+                <button class="dropbtn dropbtn_{{words.word}}">
+                  <span class="dropbtn_content">View Sentences</span>
+                  <span class="dropbtn_click" style="font-family: Material Icons; font-size : 16px; color : #3b3b3b; float:right;"
+                    onclick="dropdown('{{words.word}}')">arrow_drop_down</span>
+                </button>
+                <div class="dropdown-content dropdown-content_{{words.word}}">
+                  {% for w in words.sentence %}
+                    <div class="tooltip1">
+                      <div class="sentence sentence_{{words.word}}">{{forloop.counter}}. {{w.sentence}}
+                      </div>
+                      <i class="fa-solid fa-magnifying-glass" id="search_icon_{{words.word}}_{{forloop.counter}}" style="position: absolute;right: 5px;top: 50%;"></i>
+                      <span class="tooltiptext tooltip-right" id="tooltiptext_{{words.word}}_{{forloop.counter}}">
+                        * title : {{w.title}} <br/>
+                        * author : {{w.author}} <br/>
+                        * journal : {{w.journal}} <br/>
+                        * year : {{w.date}} <br/>
+                        * google scalar : <i class="fa-solid fa-magnifying-glass" onclick="openInNewTab('https://scholar.google.co.kr/scholar?q={{w.title}}');"></i>
+                      </span>
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </table>
+
+        {% endif %}
+      </div>
+    </div>
+    </div>
+  </main>
+
+  <script>
+    function dropdown(word) {
+      document.querySelector('.dropdown-content_'+word).classList.toggle('show_sent');
+    }
+
+    function dropdown_tag() {
+      document.querySelector('.dropdown-content-tag').classList.toggle('show_sent');
+    }
+
+    function dropdown_ssc() {
+      document.querySelector('.dropdown-content-ssc').classList.toggle('show_sent');
+    }
+
+    function showDrop(value, tg) {
+      console.log(tg.className);
+      var dropbtn_content = document.querySelector('.dropbtn_content_'+tg.className);
+      var dropbtn  = document.querySelector('.dropbtn-'+tg.className);
+
+      dropbtn_content.innerText = value;
+      dropbtn_content.style.color = '#252525';
+      dropbtn.style.borderColor = '#3992a8';
+
+      var dropdowns = document.getElementsByClassName("dropdown-content-"+tg.className);
+
+      var i;
+      for (i = 0; i < dropdowns.length; i++) {
+        var openDropdown = dropdowns[i];
+        if (openDropdown.classList.contains('show_sent')) {
+          openDropdown.classList.remove('show_sent');
+        }
+      }
+
+      var tds = document.getElementsByClassName("row_word");
+      var tds_tag = document.getElementsByClassName("tag_list");
+      var tds_ssc = document.getElementsByClassName("ssc_list");
+
+      var select = dropbtn_content.innerText;
+      var select_tag = document.querySelector('.dropbtn_content_tag').innerText;
+      var select_ssc = document.querySelector('.dropbtn_content_ssc').innerText;
+
+      if (select_tag=='전체' || select_ssc=='전체'){
+        if (select_tag=='전체' && select_ssc!='전체') {
+          for (var j=0; j< tds_ssc.length; j++){
+            var td_ssc = tds_ssc[j];
+            if (td_ssc.innerText == select_ssc){
+              td_ssc.parentElement.style.display = 'table-row';
+            }else{
+              td_ssc.parentElement.style.display = 'none';
+            }
+          }
+        }else if (select_tag!='전체' && select_ssc=='전체'){
+          for (var j=0; j< tds_tag.length; j++){
+            var td_tag = tds_tag[j];
+            if (td_tag.innerText == select_tag){
+              td_tag.parentElement.style.display = 'table-row';
+            }else{
+              td_tag.parentElement.style.display = 'none';
+            }
+          }
+        }else{
+          for (var j=0; j< tds.length; j++){
+            var td = tds[j];
+            td.style.display = 'table-row';
+          }
+        }
+      }else{
+        for (var j=0; j< tds.length; j++){
+          var td = tds[j];
+          var td_tag = tds_tag[j];
+          var td_ssc = tds_ssc[j];
+          if (td_tag.innerText == select_tag && td_ssc.innerText == select_ssc){
+            td.style.display = 'table-row';
+          }else{
+            td.style.display = 'none';
+          }
+        }
+      }
+
+    }
+
+    function openInNewTab(url) {
+      var win = window.open(url, '_blank');
+      win.focus();
+    }
+    String.prototype.replaceAll = function(org, dest) {
+        return this.split(org).join(dest);
+    }
+    {% for words in transWords %}
+        var content = document.getElementsByClassName('dropdown-content_{{words.word}}')[0].getElementsByClassName('tooltip1');
+
+        for (var i=0; i<content.length; i++) {
+          sentence = content[i].childNodes[1].innerHTML;
+          console.log(sentence);
+          match_word = sentence.match(/{{words.word}}/i);
+          content[i].childNodes[1].innerHTML = sentence.replaceAll(/{{words.word}}/i,'<b>'+match_word[0]+'</b>')
+          //console.log(sentence.replaceAll(/{{words.word}}/i,'<b>{{words.word}}</b>'));
+        }
+
+    {% endfor %}
+  </script>
+{% endblock %}

@@ -1,0 +1,739 @@
+{% load static %}
+<html>
+
+<head>
+    <title>HAI Reseacher</title>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    {% block mobileView %}
+    <!-- <meta name="viewport" content="width=800, user-scalable=yes"> -->
+    {% endblock %}
+    <link rel="shortcut icon" href="{% static 'img/로고2.png' %}">
+
+    <!-- JQuery -->
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    {% block header %}
+    {% endblock %}
+    <!-- JQuery Cookie-->
+    <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>-->
+
+    <!-- https://getbootstrap.com/docs/4.3/getting-started/introduction/ -->
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+    </script>
+    <!-- Bootstrap core JavaScript -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+    </script>
+
+    {% block summernote %}
+    {% endblock %}
+
+    <!-- Material Design Bootstrap -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.11.0/css/mdb.min.css" rel="stylesheet">
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.11.0/js/mdb.min.js"></script>
+    <!--<script src="{% static 'js/popper.js' %}"></script>-->
+    <script src="https://kit.fontawesome.com/bc9b014249.js" crossorigin="anonymous"></script>
+
+    <!-- MultiSelectJS -->
+    <script type="text/javascript" src="{% static 'js/multiPick.js' %}"></script>
+    <!-- MultiSelectCSS -->
+    <link rel="stylesheet" href="{% static 'css/multiPick.css' %}" type="text/css">
+
+    <!-- Font Awesome Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}" type="text/css">
+
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        .background {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.3);
+          z-index: 1000;
+
+          /* 숨기기 */
+          z-index: -1;
+          opacity: 0;
+        }
+
+        .show {
+          opacity: 1;
+          z-index: 1000;
+          transition: all .5s;
+        }
+
+        .window {
+          position: relative;
+          width: 100%;
+          height: 100%;
+        }
+
+        .popup {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background-color: #ffffff;
+          box-shadow: 0 2px 7px rgba(0, 0, 0, 0.3);
+
+          /* 임시 지정 */
+          width: 70%;
+
+          /* 초기에 약간 아래에 배치 */
+          transform: translate(-50%, -40%);
+        }
+
+        .show .popup {
+          transform: translate(-50%, -50%);
+          transition: all .5s;
+        }
+
+        @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,500,300,700);
+
+        * {
+          font-family: Open Sans;
+        }
+
+        .footer-distributed{
+            background: #666;
+            box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.12);
+            box-sizing: border-box;
+            text-align: left;
+            font: 16px sans-serif;
+            padding: 30px 30px;
+            bottom: 0;
+        }
+
+        .footer-distributed .footer-left,
+        .footer-distributed .footer-center,
+        .footer-distributed .footer-right{
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        /* Footer left */
+
+        .footer-distributed .footer-left{
+            width: 40%;
+        }
+
+        .footer-company-info{
+            color: #ddd;
+            font-size: 15px;
+            margin:0;
+            font-family: "Malgun Gothic";
+        }
+
+        /* Footer links */
+
+        .footer-distributed .footer-links{
+            color:  #ffffff;
+            margin: 20px 0 12px;
+            padding: 0;
+        }
+
+        .footer-distributed .footer-links a{
+            display:inline-block;
+            line-height: 1.8;
+            font-weight:400;
+            text-decoration: none;
+            color:  inherit;
+        }
+
+        .footer-distributed .footer-company-name{
+            color:  #ddd;
+            font-size: 20px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        /* Footer Center */
+
+        .footer-distributed .footer-center{
+            width: 25%;
+        }
+
+        .footer-distributed .footer-center i{
+            background-color:  #33383b;
+            color: #ffffff;
+            font-size: 25px;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 42px;
+            margin: 10px 15px;
+            vertical-align: middle;
+        }
+
+        .footer-distributed .footer-center i.fa-envelope{
+            font-size: 17px;
+            line-height: 38px;
+        }
+
+        .footer-distributed .footer-center p{
+            display: inline-block;
+            color: #ffffff;
+          font-weight:400;
+            vertical-align: middle;
+            margin:0;
+        }
+
+        .footer-distributed .footer-center p span{
+            display:block;
+            font-weight: normal;
+            font-size:14px;
+            line-height:2;
+        }
+
+        .footer-distributed .footer-center p a{
+            color:  lightseagreen;
+            text-decoration: none;;
+        }
+
+        .footer-distributed .footer-links a:before {
+          content: "|";
+          font-weight:300;
+          font-size: 20px;
+          left: 0;
+          color: #fff;
+          display: inline-block;
+          padding-right: 5px;
+        }
+
+        .footer-distributed .footer-links .link-1:before {
+          content: none;
+        }
+
+        /* Footer Right */
+
+        .footer-distributed .footer-right{
+            width: 30%;
+            height: 150px;
+            float: right;
+        }
+
+        .footer-distributed .footer-company-about{
+            line-height: 20px;
+            color:  #92999f;
+            font-size: 13px;
+            font-weight: normal;
+            padding: 20px 0 20px 0;
+            margin: 0;
+        }
+
+        .footer-distributed .footer-company-about span{
+            display: block;
+            color:  #ffffff;
+            font-size: 14px;
+            font-weight: bold;
+            text-align:right;
+        }
+
+        .footer-distributed .footer-icons{
+            margin-top: 25px;
+        }
+
+        .footer-distributed .footer-icons a{
+            display: inline-block;
+            width: 35px;
+            height: 35px;
+            cursor: pointer;
+            background-color:  #33383b;
+            border-radius: 2px;
+
+            font-size: 20px;
+            color: #ffffff;
+            text-align: center;
+            line-height: 35px;
+
+            margin-right: 3px;
+            margin-bottom: 5px;
+        }
+        .box1 {
+        width:100%;
+        height:300px;
+        word-break:normal;
+        }
+
+        .box3 {
+        float:left;
+        display:inline-block;
+        width:100%;
+        }
+
+        .tb {
+        float:left;
+        display:inline-block;
+        width:100%;
+        margin : 0 0 0 0px;
+        }
+
+        th {
+        text-align:center;
+        padding:5px;
+        border:1px solid gray;
+        }
+
+        td {
+        text-align:left;
+        vertical-align: text-top;
+        padding:5px;
+        border:1px solid gray;
+        }
+
+        .filter_input{
+            border : 0;
+            height:30px;
+            background-color:#fafafa;
+            width:100%;
+        }
+
+        /* 툴팁 기본 스타일 설정 */
+        .tooltip1 {
+          position: relative;
+          display: block;
+        }
+        .tooltip1 .tooltiptext {
+          visibility: hidden;
+          width: 90%;
+          background-color: black;
+          color: #fff;
+          text-align: left;
+          border-radius: 6px;
+          padding: 10px 10px;
+          position: absolute;
+          z-index: 1;
+        }
+
+        /* 툴팁 화살표 기본 스타일 설정 */
+        .tooltip1 .tooltiptext::after {
+          content: " ";
+          position: absolute;
+          border-style: solid;
+          border-width: 5px;
+        }
+        .tooltip1 .tooltip-right {
+          top: 0;
+          left: 105%;
+        }
+
+        .tooltip1 .tooltip-right::after {
+          top: 10%;
+          right: 100%;
+          margin-top: -5px;
+          border-color: transparent black transparent transparent;
+        }
+
+        /* 드롭다운 설정 */
+
+        .dropdown-label{
+          font-size : 12px;
+          margin : 10px;
+          font-weight : bold;
+          color : rgb(50, 50, 50);
+        }
+
+        .dropdown{
+          position : relative;
+          display : inline-block;
+          width:100%;
+        }
+        .dropdown-tag, .dropdown-ssc{
+          position : relative;
+          display : block;
+          height:30px;
+        }
+
+        .dropbtn{
+          display : block;
+          border : 2px solid #777;
+          border-radius : 4px;
+          background-color: #fafafa;
+          font-weight: 500;
+          color : rgb(0, 0, 0);
+          padding : 12px;
+          width :50%;
+          text-align: left;
+          cursor : pointer;
+          font-size : 12px;
+          z-index :1;
+          position : relative;
+        }
+        .dropbtn-tag{
+          display : block;
+          width:100%;
+          border : 2px solid #fafafa;
+          border-radius : 4px;
+          background-color: #fafafa;
+          font-weight: 500;
+          color : rgb(0, 0, 0);
+          text-align: left;
+          cursor : pointer;
+          font-size : 12px;
+          z-index :1;
+          position : relative;
+          text-align: center;
+          vertical-align: middle;
+        }
+        .dropbtn-ssc {
+          display : block;
+          width:100%;
+          border : 2px solid #fafafa;
+          border-radius : 4px;
+          background-color: #fafafa;
+          font-weight: 500;
+          color : rgb(0, 0, 0);
+          text-align: left;
+          cursor : pointer;
+          font-size : 12px;
+          z-index :1;
+          position : relative;
+          text-align: center;
+          vertical-align: middle;
+        }
+
+        .dropdown-content{
+          display : none;
+          font-weight: 400;
+          background-color: #fcfcfc;
+          min-width : 100%;
+          width:100%;
+          border-radius: 8px;
+          box-shadow: 0px 0px 10px 3px rgba(190, 190, 190, 0.6);
+
+        }
+
+        .dropdown-content-tag{
+          display : none;
+          font-weight: 400;
+          background-color: #fcfcfc;
+          border-radius: 8px;
+          box-shadow: 0px 0px 10px 3px rgba(190, 190, 190, 0.6);
+          width:100%;
+          text-align: center;
+        }
+        .dropdown-content-ssc{
+          display : none;
+          font-weight: 400;
+          background-color: #fcfcfc;
+          border-radius: 8px;
+          box-shadow: 0px 0px 10px 3px rgba(190, 190, 190, 0.6);
+          width:100%;
+          text-align: center;
+        }
+        .dropdown-content::-webkit-scrollbar{
+          width : 5px;
+          height : 10px;
+        }
+        .dropdown-content::-webkit-scrollbar-thumb{
+          border-radius : 2px;
+          background-color :rgb(194, 194, 194)
+        }
+
+        .dropdown-content div{
+          display : block;
+          text-decoration : none;
+          color : rgb(37, 37, 37);
+          font-size: 12px;
+          padding : 10px 10px;
+
+        }
+        .dropdown-content-tag div{
+          display : block;
+          text-decoration : none;
+          color : rgb(37, 37, 37);
+          font-size: 12px;
+          padding : 10px 10px;
+        }
+        .dropdown-content-ssc div{
+          display : block;
+          text-decoration : none;
+          color : rgb(37, 37, 37);
+          font-size: 12px;
+          padding : 10px 10px;
+        }
+
+        .dropdown-content div:hover{
+          background-color: rgb(226, 226, 226);
+        }
+        .dropdown-content-tag div:hover{
+          background-color: rgb(226, 226, 226);
+        }
+
+        .dropdown-content-ssc div:hover{
+          background-color: rgb(226, 226, 226);
+        }
+
+        .dropdown-content.show_sent{
+          display : table;
+        }
+        .dropdown-content-tag.show_sent{
+          display : table;
+        }
+        .dropdown-content-ssc.show_sent{
+          display : table;
+        }
+
+        .grid-container1 {
+            display: grid;
+            justify-content: space-between;
+            grid-template-columns: 200px 600px 200px;
+            gap: 10px;
+            padding: 10px;
+        }
+        #logo_hai{
+            height:100px;
+        }
+        main{
+          display: inline-block;
+          width:100%;
+          height : auto;
+          min-height: 100%;
+          padding: 20px;
+        }
+        body {
+          height: 100%;
+          margin: 0;
+        }
+        th, td{
+            color:#000;
+        }
+        @media (max-width: 800px) {
+            .content_box{
+                width:100%;
+                margin:auto;
+            }
+            th, td{
+                font-size:xx-small;
+            }
+        }
+        @media (min-width: 800px) {
+            .content_box{
+                width:70%;
+                margin:auto;
+            }
+        }
+
+        .wrapper {
+            min-height: 100%;
+        }
+    </style>
+    <script>
+    $(function(){
+        $(document).mousedown(function(e){
+            $('#in_box', this).each(function(){
+                var boxhight =  $(this).height();
+                $('#sidebar').height(boxhight);
+            });
+
+            if( !$("#sidebar").is(":hidden") ) {
+                $("#sidebar").each(function(){
+                    var l_position = $(this).offset();
+                    l_position.right = parseInt(l_position.left) + ($(this).width());
+                    l_position.bottom = parseInt(l_position.top) + parseInt($(this).height());
+
+                    if( ( l_position.left <= e.pageX && e.pageX <= l_position.right )
+                        && ( l_position.top <= e.pageY && e.pageY <= l_position.bottom ) ) {
+                    } else {
+                        document.getElementById('sidebar').setAttribute('hidden', '');
+                    }
+                });
+            }
+        });
+
+
+    });
+
+    </script>
+</head>
+
+<body>
+<!--사이드바-->
+<div id="out_box">
+    <nav id="sidebar" style="z-index:5000;" hidden>
+        <div id="side_hide">
+            <!-- <div style="text-align: right;"> -->
+            <div style="position:fixed; left: 273px; z-index:3;">
+                <!-- <button type="button" id="sidebarCollapseHide" class="btn btn-primary" onclick="hide()" style="margin-bottom: -50px;">
+                    <i class="fa fa-chevron-left"></i>
+                    <span class="sr-only">Toggle Menu</span>
+                </button> -->
+                <div id="sidebarCollapseHide" onclick="hide()"
+                    style="margin-top: 15px; margin-right:15px; margin-bottom: -30px; cursor: pointer;">
+                    <i class="fa fa-chevron-left fa-lg"></i>
+                </div>
+            </div>
+        </div>
+        <div class="p-4 pt-5" style="position: fixed; width:300px;">
+            {% if user.is_authenticated %}
+            {% if user.level == '0' %}
+            <span style="font-size: 22px;">{{ user.name }}</span> 님 환영합니다. (개발자)
+            <div style="text-align: right; margin-bottom: -25px;">
+                <a href="{% url 'logout' %}">로그아웃</a>
+            </div>
+            {% elif user.level == '1' %}
+            <span style="font-size: 22px;">{{ user.name }}</span> 님 환영합니다. (관리자)
+            <div style="text-align: right; margin-bottom: -25px;">
+                <a href="{% url 'logout' %}">로그아웃</a>
+            </div>
+            {% else %}
+            <span style="font-size: 22px;">{{ user.name }}</span> 님 환영합니다.
+            <div style="text-align: right; margin-bottom: -25px;">
+                <a href="{% url 'logout' %}">로그아웃</a>
+            </div>
+            <br>
+            {% endif %}
+            {% else %}
+
+
+            <a href="{% url 'user_login' %}">로그인</a>&nbsp;&middot;
+            <a href="{% url 'agreement' %}">회원가입</a>
+            <br>
+            {% endif %}
+            <br>
+            <ul class="list-unstyled components mb-5 allMenuComponents" id="allMenuHide">
+                <!-- <li class="active"> -->
+                <li>
+                    <a href="{% url 'main' %}"><i class="fas fa-home" style="margin-left:1px;"></i>&nbsp;&nbsp;메인으로</a>
+                </li>
+                {% if user.is_authenticated %}
+                <li>
+                    <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle menu1"><i
+                            class="fas fa-user" style="margin:0 2.5px;"></i>&nbsp;&nbsp;마이페이지</a>
+                    <ul class="collapse list-unstyled" id="homeSubmenu">
+                        <li>
+                            <a href="{% url 'profile' %}"><i class="fas fa-user-cog"></i>&nbsp;&nbsp;내 정보</a>
+                        </li>
+                        {% if user.is_admin %}
+                        <li>
+                            <a href="{% url 'user_list' %}"><i class="fas fa-user-cog"></i>&nbsp;&nbsp;회원관리</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </li>
+                <li>
+                    <a href="#homeSubmenu2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle menu1"><i
+                            class="fas fa-user" style="margin:0 2.5px;"></i>&nbsp;&nbsp Writing Support System</a>
+                    <ul class="collapse list-unstyled" id="homeSubmenu2">
+                        <li>
+                            <a href="{% url 'publicadministration' %}"><i class="fas fa-user-cog"></i>&nbsp;&nbsp;행정</a>
+                        </li>
+
+                    </ul>
+                </li>
+                {% endif %}
+
+
+            </ul>
+
+            <!--사이드바 FOOTER-->
+            <!--
+            <div class="footer" style="position: fixed; bottom: 0; margin-left:-7px;">
+                <p class="copyrightFooter">
+
+                    Copyright &copy;<script>
+                        document.write(new Date().getFullYear());
+                    </script>All rights<br>reserved | This service is made with<br><i class="icon-heart"
+                        aria-hidden="true"></i> by <a href="https://haibdm.com" target="_blank">haibm.com</a>
+                    &nbsp;&&nbsp;<a href="" target="_blank">(주)하이빅데이터미디어</a>
+                </p>
+            </div>
+            -->
+        </div>
+    </nav>
+    <div class="wrapper d-flex align-items-stretch" id="in_box">
+        <!-- 메뉴  -->
+        <div id="content" class="p-5">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light" id="navbar" style="margin:-48px; position:fixed; left:48px; right:40px; z-index:2000;">
+            <!-- <nav class="navbar navbar-expand-lg navbar-light bg-light" style="margin:-48px;"> -->
+                <!--사이드바 보기 버튼-->
+                <div id="side_show" style="position:absolute; z-index: 2000; cursor: pointer; margin-left: 11px;">
+                    <div id="sidebarCollapseShow" onclick="show()">
+                        <i class="fa fa-bars fa-lg"></i>
+                        <span class="sr-only">Toggle Menu</span>
+                    </div>
+                </div>
+
+                <div class="container-fluid">
+                    <!-- <button type="button" id="sidebarCollapse" class="btn btn-primary">
+                        <i class="fa fa-bars"></i>
+                        <span class="sr-only">Toggle Menu</span>
+                    </button> -->
+
+                    <div class="collapse navbar-collapse show" id="navbarSupportedContent">
+                        <a href="/main" style="margin-left:40px;"><img src="{% static 'img/로고.png' %}" style="width:200px; margin:5px;" id="logo_ing"></a>
+                        <!--<ul class="nav navbar-nav ml-auto">
+                            &lt;!&ndash; <li class="nav-item active"> &ndash;&gt;
+                            <li class="nav-item">
+                                <a class="nav-link" href="" target="_blank" style="font-weight: 600;"></a>
+                            </li>
+
+                        </ul>-->
+                    </div>
+                </div>
+            </nav>
+            {% block contents %}
+            {% endblock %}
+        </div>
+
+    </div>
+</div>
+    <footer class="footer-distributed">
+        <div class="footer-left">
+            <p class="footer-company-name">(주)하이빅데이터미디어</p>
+            <p class="footer-company-info">대표 : 유한별  |  연락처 : 0507-1403-8911</p>
+            <p class="footer-company-info">이사 : 김진우  |  감사 : 나태준  |  사외이사 : 한세억</p>
+            <p class="footer-company-info">주소 : 경기도 남양주시 순화궁로 249 파라곤스퀘어 M동 M1927호</p>
+            <p></p>
+            <p class="footer-company-info">e-mail : haibdmedia@gmail.com</p>
+        </div>
+        <div class="footer-center">
+        </div>
+        <div class="footer-right">
+            <p class="footer-company-about"><span></span>
+            </p>
+            <p class="footer-company-about">
+                <span>© 2022 (주)하이빅데이터미디어</span>
+                <span>© 2022 by HAIBIGDATAMEDIA Co.Ltd</span>
+            </p>
+        </div>
+    </footer>
+    <script src="{% static 'js/sidebar.js' %}"></script>
+    <script src="{% static 'js/browserCheck.js' %}"></script>
+
+    {% block script %}
+    {% endblock %}
+
+    {% if messages %}
+    {% for message in messages %}
+    {% if message.tags %}
+    <script>
+        alert("{{ message.message }}")
+    </script>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+
+</body>
+
+</html>

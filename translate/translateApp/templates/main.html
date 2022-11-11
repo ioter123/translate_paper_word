@@ -1,0 +1,35 @@
+{% extends "main_base.html" %}
+
+{% block mobileView %}
+<meta name="viewport" content="width=550, user-scalable=yes">
+{% endblock %}
+
+{% block contents %}
+{% load static %}
+<style>
+@media (max-width: 800px) {
+  .img_main {
+    width:100%;
+    margin:auto;
+  }
+}
+@media (min-width: 800px) {
+    .img_main {
+        width:70%;
+        margin:auto;
+    }
+}
+</style>
+<main style="margin-top:3%;">
+    <div  class="img_main">
+        <img src="{% static 'img/mission.png' %}" style="width:100%; margin:auto;">
+    </div>
+    <div  class="img_main">
+        <img src="{% static 'img/goal.png' %}" style="width:100%; margin:auto;">
+    </div>
+    <div  class="img_main">
+        <img src="{% static 'img/program.png' %}" style="width:100%; margin:auto;">
+    </div>
+</main>
+
+{% endblock %}

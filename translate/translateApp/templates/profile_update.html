@@ -1,0 +1,811 @@
+{% extends "main_base.html" %}
+
+{% block mobileView %}
+<meta name="viewport" content="width=550, user-scalable=yes">
+{% endblock %}
+
+{% block contents %}
+<style>
+    th{
+        border:0;
+    }
+</style>
+<div class="container">
+    <div style="margin-top: 5rem !important;">
+        <div class="col-12">
+
+            <div class="row justify-content-center">
+                <div class="card">
+                    <div class="card-header" style="padding-bottom:8px;">
+                        <strong style="font-size: 18px;"><i class="fas fa-user-edit"></i>&nbsp;&nbsp;내 정보수정</strong>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST">
+                            {% csrf_token %}
+                            <table style="color:black; margin-left:10px;">
+                                <colgroup>
+                                    <col width="20%"/>
+                                    <col width="80%"/>
+                                </colgroup>
+                                <tr>
+                                    <td class="profile_title">이메일</td>
+                                    <td class="profile_content">&nbsp;&nbsp;&nbsp;{{ user.email }}</td>
+                                </tr>
+                                <style>
+                                    .input_st{
+                                        width:80%;
+                                    }
+                                </style>
+                                <tr>
+                                    <td class="profile_title">이름</td>
+                                    <td class="profile_content">{{ user_change_form.name }}</td>
+                                </tr>
+                                <script type="text/javascript">
+                                    var id_name = document.getElementById('id_name');
+                                    id_name.setAttribute('class', 'form-control input_st');
+                                </script>
+                                <tr>
+                                    <td class="profile_title">연락처</td>
+                                    <td class="profile_content">{{ user_change_form.phone }}</td>
+                                </tr>
+                                <script type="text/javascript">
+                                    var id_phone = document.getElementById('id_phone');
+                                    id_phone.setAttribute('class', 'form-control input_st');
+                                </script>
+                                <tr>
+                                    <td class="profile_title">관심 분야</td>
+                                    <td class="profile_content">{{ user_change_form.interest }}
+                                        <div class="minwon" style="vertical-align: middle; display:inline-block;">
+                                            <div>
+                                              <i onclick="show_inter();" class="fa-solid fa-magnifying-glass"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <div class="background" id="background">
+                                    <div class="window">
+                                      <div class="popup">
+                                          <div class="card-body form-body">
+                                              <div id="fcf-form col-12">
+                                                  <h3 class="fcf-h3">관심 분야</h3>
+                                                  <div style="width:100%;">
+
+                                                      <!--<div style="height:50px;margin-right:10px; display:inline-block;">
+                                                          <label>
+                                                              <input type="checkbox" class="part_check" id="part_{{forloop.counter}}" name="part_{{forloop.counter}}" value="{{p.part_name}}"/>
+                                                              <span style="font-weight: bold;">{{p.part_name}}</span>
+                                                          </label>
+                                                      </div>-->
+                                                      <table id="inputTable" border="0" hidden>
+                                                            {% for p in part %}
+                                                            <tr>
+                                                                <td>{{p.id}}</td>
+                                                                <td>{{p.part_1_code}}</td>
+                                                                <td>{{p.part_1_name}}</td>
+                                                                <td>{{p.part_2_code}}</td>
+                                                                <td>{{p.part_2_name}}</td>
+                                                                <td>{{p.code}}</td>
+                                                                <td>{{p.name}}</td>
+                                                            </tr>
+                                                            {% endfor %}
+                                                        </table>
+                                                        <div id="multiPick">
+                                                            {% for p in part %}
+                                                            <span value="{{p.code}}" hidden>{{p.part_1_code}}#{{p.part_1_name}}#{{p.part_2_code}}#{{p.part_2_name}}#{{p.code}}#{{p.name}}</span>
+                                                            {% endfor %}
+                                                        </div>
+                                                        <div id="multiPick2">
+                                                            {% for p in part %}
+                                                            <span value="{{p.code}}" hidden>{{p.part_1_code}}#{{p.part_1_name}}#{{p.part_2_code}}#{{p.part_2_name}}#{{p.code}}#{{p.name}}</span>
+                                                            {% endfor %}
+                                                        </div>
+                                                  </div>
+                                                  <script>
+                                                    $('#multiPick').multiPick({
+                                                        limit: 1000,
+                                                        image: false,
+                                                        closeAfterSelect: false,
+                                                        search: true,
+                                                        placeholder: 'Select',
+                                                        slim: false
+                                                    });
+
+                                                  </script>
+                                                  <div class="form-group">
+                                                      <span id="fcf-button" class="btn btn-blue btn-md" onclick="part_ok();" style="margin:10px;">확인</span>
+                                                      <span id="fcf-button2" class="btn btn-blue btn-md" onclick="close();">닫기</span>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                    </div>
+                                </div>
+                                <script type="text/javascript">
+                                    var id_interest = document.getElementById('id_interest');
+                                    id_interest.setAttribute('class', 'form-control input_st');
+                                    id_interest.setAttribute('readonly', '');
+                                    id_interest.setAttribute('style', 'display: inline;');
+
+                                    var close_btn = document.getElementById('fcf-button2');
+                                    close_btn.onclick = close;
+
+                                    function show_inter() {
+                                        document.querySelector(".background").className = "background show";
+                                    }
+
+                                    function close() {
+                                        console.log('ok');
+                                        var background = document.getElementById('background');
+                                        background.setAttribute('class',"background");
+                                    }
+
+                                    function part_ok() {
+                                        var part_text = '';
+
+
+                                        var part_check = document.getElementsByClassName('part_check');
+                                        for (var i=0; i<part_check.length; i++){
+                                            if (part_check[i].checked) {
+                                                part_text = part_text + '#' + part_check[i].value + ' ';
+                                            }
+                                        }
+
+                                        //console.log(part_text);
+                                        var interest = document.getElementsByName('interest')[0];
+                                        interest.value = part_text;
+                                        document.querySelector(".background").className = "background";
+                                        var label_interest = document.getElementsByName('label_interest')[0];
+                                        label_interest.setAttribute('class','active');
+                                    }
+
+
+
+                                    var inter_str = document.getElementById('id_interest').value;
+                                    console.log(inter_str);
+                                    var words = inter_str.split('#');
+                                    console.log(words);
+                                    for (var i=1; i<words.length; i++){
+                                        var word = words[i].trim();
+                                        var check_word = document.getElementById('part_'+word);
+                                        check_word.setAttribute('checked', '');
+                                    }
+                                </script>
+                                <tr>
+                                    <td class="profile_title">소속</td>
+                                    <td class="profile_content">{{ user_change_form.belong }}</td>
+                                </tr>
+                                <script type="text/javascript">
+                                    var id_belong = document.getElementById('id_belong');
+                                    id_belong.setAttribute('class', 'form-control input_st');
+                                </script>
+                                <tr>
+                                    <td class="profile_title">직위</td>
+                                    <td class="profile_content">{{ user_change_form.rank }}</td>
+                                </tr>
+                                <script type="text/javascript">
+                                    var id_rank = document.getElementById('id_rank');
+                                    id_rank.setAttribute('class', 'form-control input_st');
+                                </script>
+                                <tr>
+                                    <td class="profile_title">학위</td>
+                                    <td class="profile_content">
+                                        {{ user_change_form.bachelor }}
+                                        {{ user_change_form.master }}
+                                        {{ user_change_form.doctor }}
+
+                                        <style>
+                                            td{
+                                                border: 1px solid #ced4da;
+                                                padding: 5px;
+                                                font-weight: 300;
+                                                color: #757575;
+                                            }
+                                            th{
+                                                font-weight: 300;
+                                                color: #757575;
+                                            }
+                                            .input_sh{
+                                                border: 0;
+                                            }
+                                            .pm{
+                                                border: 0;
+                                                font-weight: 300;
+                                                color: #757575;
+                                            }
+                                        </style>
+                                        <table id="tb1" style="margin:auto;margin-bottom:15px;width:100%;">
+                                            <colgroup>
+                                                <col width="30%"/>
+                                                <col width="30%"/>
+                                                <col width="30%"/>
+                                                <col width="10%"/>
+                                            </colgroup>
+                                            <tr>
+                                                <th>
+                                                    <div class="mb-6 md-form" style="margin-top:0;"><h6>&nbsp;학사</h6>
+                                                    </div>
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <td class="sol">학교</td>
+                                                <td class="sol">학과</td>
+                                                <td class="sol">졸업여부</td>
+                                                <td class="pm">
+                                                    <div>
+                                                        <span class="material-symbols-outlined" onclick="addRow1()">
+                                                        add_circle
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <table id="tb2" style="margin:auto;margin-bottom:15px;width:100%;">
+                                            <colgroup>
+                                                <col width="30%"/>
+                                                <col width="30%"/>
+                                                <col width="30%"/>
+                                                <col width="10%"/>
+                                            </colgroup>
+                                            <tr>
+                                                <th>
+                                                    <div class="mb-6 md-form" style="margin-top:0;"><h6>&nbsp;석사</h6>
+                                                    </div>
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <td class="sol">학교</td>
+                                                <td class="sol">학과</td>
+                                                <td class="sol">졸업여부</td>
+                                                <td class="pm">
+                                                    <div>
+                                                        <span class="material-symbols-outlined" onclick="addRow2()">
+                                                        add_circle
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <table id="tb3" style="margin:auto;margin-bottom:15px;width:100%;">
+                                            <colgroup>
+                                                <col width="30%"/>
+                                                <col width="30%"/>
+                                                <col width="30%"/>
+                                                <col width="10%"/>
+                                            </colgroup>
+                                            <tr>
+                                                <th>
+                                                    <div class="mb-6 md-form" style="margin-top:0;"><h6>&nbsp;박사</h6>
+                                                    </div>
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <td class="sol">학교</td>
+                                                <td class="sol">학과</td>
+                                                <td class="sol">졸업여부</td>
+                                                <td class="pm">
+                                                    <div>
+                                                        <span class="material-symbols-outlined" onclick="addRow3()">
+                                                        add_circle
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <script>
+                                            {% load split %}
+                                            var table1 = document.getElementById('tb1');
+                                            {% with user.bachelor|split:"/" as bachelors %}
+                                                {% for bachelor in bachelors %}
+                                                    {% with forloop.counter|divi:3 as num %}
+                                                    {% if num == 1 %}
+                                                    var newRow1 = table1.insertRow();
+                                                    var newCell1 = newRow1.insertCell(0);
+                                                    newCell1.setAttribute('class','sol');
+                                                    var input_tag1 = document.createElement('input');
+                                                    input_tag1.setAttribute('type' , 'text');
+                                                    input_tag1.setAttribute('class' , 'input_sh form-control');
+                                                    input_tag1.setAttribute('name' , 'bachelor1');
+                                                    input_tag1.setAttribute('value' , '{{ bachelor }}');
+                                                    newCell1.appendChild(input_tag1);
+
+                                                    {% endif %}
+                                                    {% endwith %}
+
+                                                    {% with forloop.counter|divi:3 as num %}
+                                                    {% if num == 2 %}
+                                                    var newCell2 = newRow1.insertCell(1);
+                                                    newCell2.setAttribute('class','sol');
+                                                    var input_tag2 = document.createElement('input');
+                                                    input_tag2.setAttribute('type' , 'text');
+                                                    input_tag2.setAttribute('class' , 'input_sh form-control');
+                                                    input_tag2.setAttribute('name' , 'bachelor1');
+                                                    input_tag2.setAttribute('value' , '{{ bachelor }}');
+                                                    newCell2.appendChild(input_tag2);
+                                                    {% endif %}
+                                                    {% endwith %}
+
+                                                    {% with forloop.counter|divi:3 as num %}
+                                                    {% if num == 0 %}
+                                                    var newCell3 = newRow1.insertCell(2);
+                                                    newCell3.setAttribute('class','sol');
+                                                    var input_tag3 = document.createElement('select');
+                                                    input_tag3.setAttribute('class' , 'input_sh form-control');
+                                                    input_tag3.setAttribute('name' , 'bachelor1');
+                                                    newCell3.appendChild(input_tag3);
+                                                    var option_tag1 = document.createElement('option');
+                                                    var option_tag2 = document.createElement('option');
+                                                    var option_tag3 = document.createElement('option');
+                                                    var option_tag4 = document.createElement('option');
+                                                    option_tag1.setAttribute('value' , '');
+                                                    option_tag2.setAttribute('value' , '재학중');
+                                                    option_tag3.setAttribute('value' , '수료');
+                                                    option_tag4.setAttribute('value' , '졸업');
+                                                    option_tag1.innerText = '';
+                                                    option_tag2.innerText = '재학중';
+                                                    option_tag3.innerText = '수료';
+                                                    option_tag4.innerText = '졸업';
+                                                    input_tag3.appendChild(option_tag1);
+                                                    input_tag3.appendChild(option_tag2);
+                                                    input_tag3.appendChild(option_tag3);
+                                                    input_tag3.appendChild(option_tag4);
+
+                                                    if (option_tag1.value == '{{ bachelor }}'){
+                                                         option_tag1.setAttribute('selected' , '');
+                                                    }else if (option_tag2.value == '{{ bachelor }}'){
+                                                         option_tag2.setAttribute('selected' , '');
+                                                    }else if (option_tag3.value == '{{ bachelor }}'){
+                                                         option_tag3.setAttribute('selected' , '');
+                                                    }else if (option_tag4.value == '{{ bachelor }}'){
+                                                         option_tag4.setAttribute('selected' , '');
+                                                    }
+                                                    var newCell4 = newRow1.insertCell(3);
+                                                    newCell4.setAttribute('class','pm');
+                                                    var div_tag = document.createElement('div');
+                                                    div_tag.innerHTML = '<span class="material-symbols-outlined" onclick="subRow1(event)">do_not_disturb_on</span>';
+                                                    newCell4.appendChild(div_tag);
+                                                    {% endif %}
+                                                    {% endwith %}
+                                                {% endfor %}
+                                            {% endwith %}
+                                            var table1 = document.getElementById('tb2');
+                                            {% with user.master|split:"/" as masters %}
+                                                {% for master in masters %}
+                                                    {% with forloop.counter|divi:3 as num %}
+                                                    {% if num == 1 %}
+                                                    var newRow1 = table1.insertRow();
+                                                    var newCell1 = newRow1.insertCell(0);
+                                                    newCell1.setAttribute('class','sol');
+                                                    var input_tag1 = document.createElement('input');
+                                                    input_tag1.setAttribute('type' , 'text');
+                                                    input_tag1.setAttribute('class' , 'input_sh form-control');
+                                                    input_tag1.setAttribute('name' , 'master1');
+                                                    input_tag1.setAttribute('value' , '{{ master }}');
+                                                    newCell1.appendChild(input_tag1);
+
+                                                    {% endif %}
+                                                    {% endwith %}
+
+                                                    {% with forloop.counter|divi:3 as num %}
+                                                    {% if num == 2 %}
+                                                    var newCell2 = newRow1.insertCell(1);
+                                                    newCell2.setAttribute('class','sol');
+                                                    var input_tag2 = document.createElement('input');
+                                                    input_tag2.setAttribute('type' , 'text');
+                                                    input_tag2.setAttribute('class' , 'input_sh form-control');
+                                                    input_tag2.setAttribute('name' , 'master1');
+                                                    input_tag2.setAttribute('value' , '{{ master }}');
+                                                    newCell2.appendChild(input_tag2);
+                                                    {% endif %}
+                                                    {% endwith %}
+
+                                                    {% with forloop.counter|divi:3 as num %}
+                                                    {% if num == 0 %}
+                                                    var newCell3 = newRow1.insertCell(2);
+                                                    newCell3.setAttribute('class','sol');
+                                                    var input_tag3 = document.createElement('select');
+                                                    input_tag3.setAttribute('class' , 'input_sh form-control');
+                                                    input_tag3.setAttribute('name' , 'master1');
+                                                    newCell3.appendChild(input_tag3);
+                                                    var option_tag1 = document.createElement('option');
+                                                    var option_tag2 = document.createElement('option');
+                                                    var option_tag3 = document.createElement('option');
+                                                    var option_tag4 = document.createElement('option');
+                                                    option_tag1.setAttribute('value' , '');
+                                                    option_tag2.setAttribute('value' , '재학중');
+                                                    option_tag3.setAttribute('value' , '수료');
+                                                    option_tag4.setAttribute('value' , '졸업');
+                                                    option_tag1.innerText = '';
+                                                    option_tag2.innerText = '재학중';
+                                                    option_tag3.innerText = '수료';
+                                                    option_tag4.innerText = '졸업';
+                                                    input_tag3.appendChild(option_tag1);
+                                                    input_tag3.appendChild(option_tag2);
+                                                    input_tag3.appendChild(option_tag3);
+                                                    input_tag3.appendChild(option_tag4);
+
+                                                    if (option_tag1.value == '{{ master }}'){
+                                                         option_tag1.setAttribute('selected' , '');
+                                                    }else if (option_tag2.value == '{{ master }}'){
+                                                         option_tag2.setAttribute('selected' , '');
+                                                    }else if (option_tag3.value == '{{ master }}'){
+                                                         option_tag3.setAttribute('selected' , '');
+                                                    }else if (option_tag4.value == '{{ master }}'){
+                                                         option_tag4.setAttribute('selected' , '');
+                                                    }
+                                                    var newCell4 = newRow1.insertCell(3);
+                                                    newCell4.setAttribute('class','pm');
+                                                    var div_tag = document.createElement('div');
+                                                    div_tag.innerHTML = '<span class="material-symbols-outlined" onclick="subRow2(event)">do_not_disturb_on</span>';
+                                                    newCell4.appendChild(div_tag);
+                                                    {% endif %}
+                                                    {% endwith %}
+                                                {% endfor %}
+                                            {% endwith %}
+
+                                           var table1 = document.getElementById('tb3');
+                                            {% with user.doctor|split:"/" as doctors %}
+                                                {% for doctor in doctors %}
+                                                    {% with forloop.counter|divi:3 as num %}
+                                                    {% if num == 1 %}
+                                                    var newRow1 = table1.insertRow();
+                                                    var newCell1 = newRow1.insertCell(0);
+                                                    newCell1.setAttribute('class','sol');
+                                                    var input_tag1 = document.createElement('input');
+                                                    input_tag1.setAttribute('type' , 'text');
+                                                    input_tag1.setAttribute('class' , 'input_sh form-control');
+                                                    input_tag1.setAttribute('name' , 'doctor1');
+                                                    input_tag1.setAttribute('value' , '{{ doctor }}');
+                                                    newCell1.appendChild(input_tag1);
+
+                                                    {% endif %}
+                                                    {% endwith %}
+
+                                                    {% with forloop.counter|divi:3 as num %}
+                                                    {% if num == 2 %}
+                                                    var newCell2 = newRow1.insertCell(1);
+                                                    newCell2.setAttribute('class','sol');
+                                                    var input_tag2 = document.createElement('input');
+                                                    input_tag2.setAttribute('type' , 'text');
+                                                    input_tag2.setAttribute('class' , 'input_sh form-control');
+                                                    input_tag2.setAttribute('name' , 'doctor1');
+                                                    input_tag2.setAttribute('value' , '{{ doctor }}');
+                                                    newCell2.appendChild(input_tag2);
+                                                    {% endif %}
+                                                    {% endwith %}
+
+                                                    {% with forloop.counter|divi:3 as num %}
+                                                    {% if num == 0 %}
+                                                    var newCell3 = newRow1.insertCell(2);
+                                                    newCell3.setAttribute('class','sol');
+                                                    var input_tag3 = document.createElement('select');
+                                                    input_tag3.setAttribute('class' , 'input_sh form-control');
+                                                    input_tag3.setAttribute('name' , 'doctor1');
+                                                    newCell3.appendChild(input_tag3);
+                                                    var option_tag1 = document.createElement('option');
+                                                    var option_tag2 = document.createElement('option');
+                                                    var option_tag3 = document.createElement('option');
+                                                    var option_tag4 = document.createElement('option');
+                                                    option_tag1.setAttribute('value' , '');
+                                                    option_tag2.setAttribute('value' , '재학중');
+                                                    option_tag3.setAttribute('value' , '수료');
+                                                    option_tag4.setAttribute('value' , '졸업');
+                                                    option_tag1.innerText = '';
+                                                    option_tag2.innerText = '재학중';
+                                                    option_tag3.innerText = '수료';
+                                                    option_tag4.innerText = '졸업';
+                                                    input_tag3.appendChild(option_tag1);
+                                                    input_tag3.appendChild(option_tag2);
+                                                    input_tag3.appendChild(option_tag3);
+                                                    input_tag3.appendChild(option_tag4);
+
+                                                    if (option_tag1.value == '{{ doctor }}'){
+                                                         option_tag1.setAttribute('selected' , '');
+                                                    }else if (option_tag2.value == '{{ doctor }}'){
+                                                         option_tag2.setAttribute('selected' , '');
+                                                    }else if (option_tag3.value == '{{ doctor }}'){
+                                                         option_tag3.setAttribute('selected' , '');
+                                                    }else if (option_tag4.value == '{{ doctor }}'){
+                                                         option_tag4.setAttribute('selected' , '');
+                                                    }
+                                                    var newCell4 = newRow1.insertCell(3);
+                                                    newCell4.setAttribute('class','pm');
+                                                    var div_tag = document.createElement('div');
+                                                    div_tag.innerHTML = '<span class="material-symbols-outlined" onclick="subRow3(event)">do_not_disturb_on</span>';
+                                                    newCell4.appendChild(div_tag);
+                                                    {% endif %}
+                                                    {% endwith %}
+                                                {% endfor %}
+                                            {% endwith %}
+
+                                            let rowCnt1 = 2;
+                                            let rowCnt2 = 2;
+                                            let rowCnt3 = 2;
+
+                                            function addRow1() {
+
+                                                // table element 찾기
+                                                let table = document.getElementById('tb1');
+
+                                                // 새 행(Row) 추가
+                                                let newRow = table.insertRow();
+
+                                                // 새 행(Row)에 Cell 추가
+                                                let newCell1 = newRow.insertCell(0);
+                                                let newCell2 = newRow.insertCell(1);
+                                                let newCell3 = newRow.insertCell(2);
+                                                let newCell4 = newRow.insertCell(3);
+                                                newCell1.setAttribute('class','sol');
+                                                newCell2.setAttribute('class','sol');
+                                                newCell3.setAttribute('class','sol');
+                                                newCell4.setAttribute('class','pm');
+
+
+                                                // cell 안에 입력태그 추가
+                                                let input_tag1 = document.createElement('input');
+                                                input_tag1.setAttribute('type' , 'text');
+                                                input_tag1.setAttribute('class' , 'input_sh form-control');
+                                                input_tag1.setAttribute('name' , 'bachelor1');
+                                                newCell1.appendChild(input_tag1);
+
+                                                let input_tag2 = document.createElement('input');
+                                                input_tag2.setAttribute('type' , 'text');
+                                                input_tag2.setAttribute('class' , 'input_sh form-control');
+                                                input_tag2.setAttribute('name' , 'bachelor1');
+                                                newCell2.appendChild(input_tag2);
+
+                                                let input_tag3 = document.createElement('select');
+                                                input_tag3.setAttribute('class' , 'input_sh form-control');
+                                                input_tag3.setAttribute('name' , 'bachelor1');
+                                                newCell3.appendChild(input_tag3);
+                                                let option_tag1 = document.createElement('option');
+                                                let option_tag2 = document.createElement('option');
+                                                let option_tag3 = document.createElement('option');
+                                                let option_tag4 = document.createElement('option');
+                                                option_tag1.setAttribute('value' , '');
+                                                option_tag2.setAttribute('value' , '재학중');
+                                                option_tag3.setAttribute('value' , '수료');
+                                                option_tag4.setAttribute('value' , '졸업');
+                                                option_tag1.innerText = '';
+                                                option_tag2.innerText = '재학중';
+                                                option_tag3.innerText = '수료';
+                                                option_tag4.innerText = '졸업';
+                                                input_tag3.appendChild(option_tag1);
+                                                input_tag3.appendChild(option_tag2);
+                                                input_tag3.appendChild(option_tag3);
+                                                input_tag3.appendChild(option_tag4);
+
+                                                let div_tag = document.createElement('div');
+                                                div_tag.innerHTML = '<span class="material-symbols-outlined" onclick="subRow1(event)">do_not_disturb_on</span>';
+                                                newCell4.appendChild(div_tag);
+
+                                                rowCnt1++;
+                                            }
+
+                                            function addRow2() {
+
+                                                // table element 찾기
+                                                let table = document.getElementById('tb2');
+
+                                                // 행 갯수
+                                                let rowCnt2 = table.rows.length-1;
+
+                                                // 새 행(Row) 추가
+                                                let newRow = table.insertRow();
+
+                                                // 새 행(Row)에 Cell 추가
+                                                let newCell1 = newRow.insertCell(0);
+                                                let newCell2 = newRow.insertCell(1);
+                                                let newCell3 = newRow.insertCell(2);
+                                                let newCell4 = newRow.insertCell(3);
+                                                newCell1.setAttribute('class','sol');
+                                                newCell2.setAttribute('class','sol');
+                                                newCell3.setAttribute('class','sol');
+                                                newCell4.setAttribute('class','pm');
+
+                                                // cell 안에 입력태그 추가
+                                                let input_tag1 = document.createElement('input');
+                                                input_tag1.setAttribute('type' , 'text');
+                                                input_tag1.setAttribute('class' , 'input_sh form-control');
+                                                input_tag1.setAttribute('name' , 'master1');
+                                                newCell1.appendChild(input_tag1);
+
+                                                let input_tag2 = document.createElement('input');
+                                                input_tag2.setAttribute('type' , 'text');
+                                                input_tag2.setAttribute('class' , 'input_sh form-control');
+                                                input_tag2.setAttribute('name' , 'master1');
+                                                newCell2.appendChild(input_tag2);
+
+                                                let input_tag3 = document.createElement('select');
+                                                input_tag3.setAttribute('class' , 'input_sh form-control');
+                                                input_tag3.setAttribute('name' , 'master1');
+                                                newCell3.appendChild(input_tag3);
+                                                let option_tag1 = document.createElement('option');
+                                                let option_tag2 = document.createElement('option');
+                                                let option_tag3 = document.createElement('option');
+                                                let option_tag4 = document.createElement('option');
+                                                option_tag1.setAttribute('value' , '');
+                                                option_tag2.setAttribute('value' , '재학중');
+                                                option_tag3.setAttribute('value' , '수료');
+                                                option_tag4.setAttribute('value' , '졸업');
+                                                option_tag1.innerText = '';
+                                                option_tag2.innerText = '재학중';
+                                                option_tag3.innerText = '수료';
+                                                option_tag4.innerText = '졸업';
+                                                input_tag3.appendChild(option_tag1);
+                                                input_tag3.appendChild(option_tag2);
+                                                input_tag3.appendChild(option_tag3);
+                                                input_tag3.appendChild(option_tag4);
+
+                                                let div_tag = document.createElement('div');
+                                                div_tag.innerHTML = '<span class="material-symbols-outlined" onclick="subRow2(event)">do_not_disturb_on</span>';
+                                                newCell4.appendChild(div_tag);
+
+                                                rowCnt2++;
+                                            }
+
+                                            function addRow3() {
+
+                                                // table element 찾기
+                                                let table = document.getElementById('tb3');
+
+                                                // 행 갯수
+                                                let rowCnt3 = table.rows.length-1;
+
+                                                // 새 행(Row) 추가
+                                                let newRow = table.insertRow();
+
+                                                // 새 행(Row)에 Cell 추가
+                                                let newCell1 = newRow.insertCell(0);
+                                                let newCell2 = newRow.insertCell(1);
+                                                let newCell3 = newRow.insertCell(2);
+                                                let newCell4 = newRow.insertCell(3);
+                                                newCell1.setAttribute('class','sol');
+                                                newCell2.setAttribute('class','sol');
+                                                newCell3.setAttribute('class','sol');
+                                                newCell4.setAttribute('class','pm');
+
+                                                // cell 안에 입력태그 추가
+                                                let input_tag1 = document.createElement('input');
+                                                input_tag1.setAttribute('type' , 'text');
+                                                input_tag1.setAttribute('class' , 'input_sh form-control');
+                                                input_tag1.setAttribute('name' , 'doctor1');
+                                                newCell1.appendChild(input_tag1);
+
+                                                let input_tag2 = document.createElement('input');
+                                                input_tag2.setAttribute('type' , 'text');
+                                                input_tag2.setAttribute('class' , 'input_sh form-control');
+                                                input_tag2.setAttribute('name' , 'doctor1');
+                                                newCell2.appendChild(input_tag2);
+
+                                                let input_tag3 = document.createElement('select');
+                                                input_tag3.setAttribute('class' , 'input_sh form-control');
+                                                input_tag3.setAttribute('name' , 'doctor1');
+                                                newCell3.appendChild(input_tag3);
+                                                let option_tag1 = document.createElement('option');
+                                                let option_tag2 = document.createElement('option');
+                                                let option_tag3 = document.createElement('option');
+                                                let option_tag4 = document.createElement('option');
+                                                option_tag1.setAttribute('value' , '');
+                                                option_tag2.setAttribute('value' , '재학중');
+                                                option_tag3.setAttribute('value' , '수료');
+                                                option_tag4.setAttribute('value' , '졸업');
+                                                option_tag1.innerText = '';
+                                                option_tag2.innerText = '재학중';
+                                                option_tag3.innerText = '수료';
+                                                option_tag4.innerText = '졸업';
+                                                input_tag3.appendChild(option_tag1);
+                                                input_tag3.appendChild(option_tag2);
+                                                input_tag3.appendChild(option_tag3);
+                                                input_tag3.appendChild(option_tag4);
+
+                                                let div_tag = document.createElement('div');
+                                                div_tag.innerHTML = '<span class="material-symbols-outlined" onclick="subRow3(event)">do_not_disturb_on</span>';
+                                                newCell4.appendChild(div_tag);
+
+                                                rowCnt3++;
+                                            }
+
+                                            function subRow1(event) {
+                                                const tr = event.target.parentNode.parentNode.parentNode;
+                                                const tr_ind1 = tr.rowIndex;
+                                                // table element 찾기
+                                                const table = document.getElementById('tb1');
+
+                                                // 행 갯수
+                                                let rowCnt1 = table.rows.length;
+
+                                                if (rowCnt1 != 3) {
+                                                    table.deleteRow(tr_ind1);
+                                                }
+                                            }
+
+                                             function subRow2(event) {
+                                                const tr = event.target.parentNode.parentNode.parentNode;
+                                                const tr_ind2 = tr.rowIndex;
+                                                // table element 찾기
+                                                const table = document.getElementById('tb2');
+
+                                                // 행 갯수
+                                                let rowCnt2 = table.rows.length;
+
+                                                if (rowCnt2 != 3) {
+                                                    table.deleteRow(tr_ind2);
+                                                }
+                                            }
+
+                                             function subRow3(event) {
+                                                const tr = event.target.parentNode.parentNode.parentNode;
+                                                const tr_ind3 = tr.rowIndex;
+                                                // table element 찾기
+                                                const table = document.getElementById('tb3');
+
+                                                // 행 갯수
+                                                let rowCnt3 = table.rows.length;
+
+                                                if (rowCnt3 != 3) {
+                                                    table.deleteRow(tr_ind3);
+                                                }
+                                            }
+                                        </script>
+                                    </td>
+                                </tr>
+                            </table>
+                            <script type="text/javascript">
+                                var id_bachelor = document.getElementById('id_bachelor');
+                                id_bachelor.setAttribute('hidden', '');
+                                var id_master = document.getElementById('id_master');
+                                id_master.setAttribute('hidden', '');
+                                var id_doctor = document.getElementById('id_doctor');
+                                id_doctor.setAttribute('hidden', '');
+
+                                var td_t = document.getElementsByTagName('td');
+                                for (var i=0; i<td_t.length; i++) {
+                                    td_t[i].onclick = update_data;
+                                }
+
+
+                                function update_data() {
+                                    var bachelor_class = document.getElementsByName('bachelor1');
+                                    var master_class = document.getElementsByName('master1');
+                                    var doctor_class = document.getElementsByName('doctor1');
+
+                                    console.log(bachelor_class[0].value);
+                                    bachelor_val = bachelor_class[0].value;
+                                    master_val = master_class[0].value;
+                                    doctor_val = doctor_class[0].value;
+                                    for (var i=1; i<bachelor_class.length; i++) {
+                                        bachelor_val = bachelor_val + '/' + bachelor_class[i].value
+                                    }
+                                    for (var i=1; i<master_class.length; i++) {
+                                        master_val = master_val + '/' + master_class[i].value
+                                    }
+                                    for (var i=1; i<doctor_class.length; i++) {
+                                        doctor_val = doctor_val + '/' + doctor_class[i].value
+                                    }
+
+                                    id_bachelor.setAttribute('value', bachelor_val);
+                                    id_master.setAttribute('value', master_val);
+                                    id_doctor.setAttribute('value', doctor_val);
+                                }
+                            </script>
+                            <br>
+                            <div style="text-align: center; margin-bottom:-15px;">
+                                <a onclick="location.href='/profile/'" class="btn btn-sm" id="back_btn"><i class="fa fa-reply"></i>&nbsp;돌아가기</a>
+                                <button type="submit" class="btn btn-sm" id="detail_btn"><i class="fas fa-check"></i>&nbsp;수정하기</button>
+                            </div>
+                        </form>
+                        
+                        <script type = "text/javascript">
+                            function maxLengthCheck(object){
+                                if (object.value.length > object.maxLength) {
+                                    object.value = object.value.slice(0, object.maxLength);
+                                    }   
+                                }
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

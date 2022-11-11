@@ -1,0 +1,727 @@
+{% extends "user_base.html" %}
+{% load static %}
+
+{% block mobileView %}
+<meta name="viewport" content="width=570, user-scalable=yes">
+{% endblock %}
+
+{% block contents %}
+<div class="container">
+    <div class="row justify-content-md-center">
+        <div style="position: absolute; top: 50%; height: 125%; margin-top: -438.195px; margin-bottom:20px;">
+            <div class="card" style="width: 40rem;">
+                <div class="card-body">
+                    <div class="text-center">
+                        <a href="/main"><img src="{% static 'img/로고.png' %}"
+                            style="width: 30%; margin-top:10px; margin-bottom: -30px;"></a>
+                    </div>
+                    <div class="row mt-5">
+                        <div class="col-12">
+                            <form action="" id="signup" method="POST" novalidate>
+                                {% csrf_token %}
+
+                                <!--이메일-->
+                                <div class="mb-4 md-form">
+                                    <label name="label_email" for="{{ form.email.id_for_label }}"><i
+                                            class="fas fa-user"></i>&nbsp;&nbsp;{{ form.email.label }}</label>
+                                    {{ form.email }}
+                                    <script type="text/javascript">
+                                        if (document.getElementsByName('email')[0].value != '') {
+                                            document.getElementsByName('label_email')[0].setAttribute('class',
+                                                'active');
+                                        }
+                                    </script>
+                                    {% if form.email.errors %}
+                                    <script type="text/javascript">
+                                        document.getElementsByName('email')[0].setAttribute('class',
+                                            'form-control is-invalid')
+                                    </script>
+                                    {% for error in form.email.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ error }}
+                                    </div>
+                                    {% endfor %}
+                                    {% endif %}
+                                    <small class="form-text text-muted">
+                                        로그인 시 사용할 이메일을 입력해주세요.
+                                        회원가입 후 입력하신 메일주소로 본인인증 메일이 전송됩니다.
+                                    </small>
+                                </div>
+                                <!--비밀번호-->
+                                <div class="form-row">
+                                    <div class="col-md-6" style="margin-top:-25px; margin-bottom: -25px;">
+                                        <div class="mb-4 md-form">
+                                            <label name="label_password2" for="{{ form.password2.id_for_label }}"><i
+                                                    class="fas fa-unlock"></i>&nbsp;&nbsp;비밀번호</label>
+                                            {{ form.password2 }}
+                                            <script type="text/javascript">
+                                                if (document.getElementsByName('password2')[0].value != '') {
+                                                    document.getElementsByName('label_password2')[0].setAttribute('class', 'active');
+                                                }
+                                            </script>
+                                            {% if form.password2.errors %}
+                                            <script type="text/javascript">
+                                                document.getElementsByName('password2')[0].setAttribute('class',
+                                                    'form-control is-invalid')
+                                            </script>
+                                            {% for error in form.password2.errors %}
+                                            <div style="white-space: nowrap;" class="invalid-feedback">
+                                                {{ error }}
+                                            </div>
+                                            {% endfor %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <!--비밀번호확인-->
+                                    <div class="col-md-6" style="margin-top:-25px; margin-bottom: -25px;">
+                                        <div class="mb-4 md-form">
+                                            <label name="label_password1" for="{{ form.password1.id_for_label }}"><i
+                                                    class="fas fa-unlock-alt"></i>&nbsp;&nbsp;비밀번호 확인</label>
+                                            {{ form.password1 }}
+                                            <script type="text/javascript">
+                                                if (document.getElementsByName('password1')[0].value != '') {
+                                                    document.getElementsByName('label_password1')[0].setAttribute('class','active');
+                                                }
+                                            </script>
+                                            {% if form.password1.errors %}
+                                            <script type="text/javascript">
+                                                document.getElementsByName('password1')[0].setAttribute('class',
+                                                    'form-control is-invalid')
+                                            </script>
+                                            {% for error in form.password1.errors %}
+                                            <div class="invalid-feedback">
+                                                {{ error }}
+                                            </div>
+                                            {% endfor %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <small style="margin-left: 4px; margin-top:8px;" class="form-text text-muted">
+                                        최소 8개의 숫자와 문자 또는 특수기호를 입력해주세요. 일상적인 비밀번호는 사용할 수 없습니다.
+                                    </small>
+                                </div>
+
+
+                                <!--이름-->
+                                <div class="mb-4 md-form">
+                                    <label name="label_name" for="{{ form.name.id_for_label }}"><i
+                                            class="fas fa-user-edit"></i>&nbsp;&nbsp;{{ form.name.label }}</label>
+                                    {{ form.name }}
+                                    <script type="text/javascript">
+                                        if (document.getElementsByName('name')[0].value != '') {
+                                            document.getElementsByName('label_name')[0].setAttribute('class', 'active');
+                                        }
+                                    </script>
+                                    {% if form.name.errors %}
+                                    <script type="text/javascript">
+                                        document.getElementsByName('name')[0].setAttribute('class',
+                                            'form-control is-invalid')
+                                    </script>
+                                    {% for error in form.name.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ error }}
+                                    </div>
+                                    {% endfor %}
+                                    {% endif %}
+                                    <small class="form-text text-muted">
+                                        아이디, 비밀번호 찾기에 사용됩니다.
+                                    </small>
+                                </div>
+                                <!--휴대폰번호-->
+                                <div class="mb-4 md-form">
+                                    <label name="label_phone" for="{{ form.phone.id_for_label }}"><i
+                                            class="fas fa-phone"></i>&nbsp;&nbsp;{{ form.phone.label }}</label>
+                                    {{ form.phone }}
+                                    <script type="text/javascript">
+                                        if (document.getElementsByName('phone')[0].value != '') {
+                                            document.getElementsByName('label_phone')[0].setAttribute('class', 'active');
+                                        }
+                                    </script>
+                                    {% if form.phone.errors %}
+                                    <script type="text/javascript">
+                                        document.getElementsByName('phone')[0].setAttribute('class',
+                                            'form-control is-invalid')
+                                    </script>
+                                    {% for error in form.phone.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ error }}
+                                    </div>
+                                    {% endfor %}
+                                    {% endif %}
+                                    <small class="form-text text-muted">
+                                        하이픈(-)을 제외한 숫자로 입력해주세요.
+                                    </small>
+                                </div>
+                                <!--관심분야-->
+                                <div class="background" id="background">
+                                    <div class="window">
+                                      <div class="popup">
+                                          <div class="card-body form-body">
+                                              <div id="fcf-form col-12">
+                                                  <h3 class="fcf-h3">관심 분야</h3>
+                                                  <div style="width:100%;">
+
+                                                      <!--<div style="height:50px;margin-right:10px; display:inline-block;">
+                                                          <label>
+                                                              <input type="checkbox" class="part_check" id="part_{{forloop.counter}}" name="part_{{forloop.counter}}" value="{{p.part_name}}"/>
+                                                              <span style="font-weight: bold;">{{p.part_name}}</span>
+                                                          </label>
+                                                      </div>-->
+                                                      <table id="inputTable" border="0" hidden>
+                                                            {% for p in part %}
+                                                            <tr>
+                                                                <td>{{p.id}}</td>
+                                                                <td>{{p.part_1_code}}</td>
+                                                                <td>{{p.part_1_name}}</td>
+                                                                <td>{{p.part_2_code}}</td>
+                                                                <td>{{p.part_2_name}}</td>
+                                                                <td>{{p.code}}</td>
+                                                                <td>{{p.name}}</td>
+                                                            </tr>
+                                                            {% endfor %}
+                                                        </table>
+                                                        <div id="multiPick">
+                                                            {% for p in part %}
+                                                            <span value="{{p.code}}" hidden>{{p.part_1_code}}#{{p.part_1_name}}#{{p.part_2_code}}#{{p.part_2_name}}#{{p.code}}#{{p.name}}</span>
+                                                            {% endfor %}
+                                                        </div>
+                                                        <div id="multiPick2">
+                                                            {% for p in part %}
+                                                            <span value="{{p.code}}" hidden>{{p.part_1_code}}#{{p.part_1_name}}#{{p.part_2_code}}#{{p.part_2_name}}#{{p.code}}#{{p.name}}</span>
+                                                            {% endfor %}
+                                                        </div>
+                                                  </div>
+                                                  <script>
+                                                    $('#multiPick').multiPick({
+                                                        limit: 1000,
+                                                        image: false,
+                                                        closeAfterSelect: false,
+                                                        search: true,
+                                                        placeholder: 'Select',
+                                                        slim: false
+                                                    });
+
+                                                  </script>
+                                                  <div class="form-group">
+                                                      <span id="fcf-button" class="btn btn-blue btn-md" onclick="part_ok();" style="margin:10px;">확인</span>
+                                                      <span id="fcf-button2" class="btn btn-blue btn-md" onclick="close();">닫기</span>
+                                                  </div>
+                                                    <script type="text/javascript">
+                                                        var close_btn = document.getElementById('fcf-button2');
+                                                        close_btn.onclick = close;
+
+                                                        function close() {
+                                                            console.log('ok');
+                                                            var background = document.getElementById('background');
+                                                            background.setAttribute('class',"background");
+                                                        }
+
+                                                        function part_ok() {
+                                                            var part_text = '';
+
+                                                            var part_check = document.getElementsByClassName('item');
+                                                            for (var i=0; i<part_check.length; i++){
+                                                                part_text = part_text + '#' + part_check[i].innerText + ' ';
+                                                            }
+
+                                                            console.log(part_text);
+                                                            var interest = document.getElementsByName('interest')[0];
+                                                            interest.value = part_text;
+                                                            document.querySelector(".background").className = "background";
+                                                            var label_interest = document.getElementsByName('label_interest')[0];
+                                                            label_interest.setAttribute('class','active');
+                                                        }
+                                                    </script>
+                                              </div>
+                                          </div>
+                                      </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4 md-form">
+                                    <label name="label_interest" for="{{ form.interest.id_for_label }}"><i
+                                            class="fas fa-book"></i>&nbsp;&nbsp;{{ form.interest.label }}
+                                        <div class="minwon" style="vertical-align: middle; display:inline-block;">
+                                            <div>
+                                              <i onclick="show();" class="fa-solid fa-magnifying-glass"></i>
+                                            </div>
+
+                                        </div>
+                                    </label>
+                                    <script type="text/javascript">
+                                        function show() {
+                                            document.querySelector(".background").className = "background show";
+                                        }
+                                    </script>
+                                    {{ form.interest }}
+                                    <script type="text/javascript">
+                                        document.getElementsByName('interest')[0].setAttribute('readonly','');
+                                        if (document.getElementsByName('interest')[0].value != '') {
+                                            document.getElementsByName('label_interest')[0].setAttribute('class',
+                                                'active');
+                                        }
+
+                                    </script>
+                                    {% if form.interest.errors %}
+                                    <script type="text/javascript">
+                                        document.getElementsByName('interest')[0].setAttribute('class',
+                                            'form-control is-invalid')
+                                    </script>
+                                    {% for error in form.interest.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ error }}
+                                    </div>
+                                    {% endfor %}
+                                    {% endif %}
+                                    <small class="form-text text-muted">
+                                        돋보기 버튼을 눌러 관심있는 연구 분야를 1개 이상 선택해주세요.
+                                    </small>
+                                </div>
+
+                                <!--소속-->
+                                <div class="mb-4 md-form">
+                                    <label name="label_belong" for="{{ form.belong.id_for_label }}"><i
+                                            class="fas fa-school"></i>&nbsp;&nbsp;{{ form.belong.label }}</label>
+                                    {{ form.belong }}
+
+                                    <script type="text/javascript">
+                                        if (document.getElementsByName('belong')[0].value != '') {
+                                            document.getElementsByName('label_belong')[0].setAttribute('class', 'active');
+                                        }
+                                    </script>
+                                    {% if form.belong.errors %}
+                                    <script type="text/javascript">
+                                        document.getElementsByName('belong')[0].setAttribute('class',
+                                            'form-control is-invalid')
+                                    </script>
+                                    {% for error in form.belong.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ error }}
+                                    </div>
+                                    {% endfor %}
+                                    {% endif %}
+                                    <small class="form-text text-muted">
+                                        소속(학교, 직장 등)을 입력해주세요.
+                                    </small>
+                                </div>
+
+                                <!--직위-->
+                                <div class="mb-4 md-form">
+                                    <label name="label_rank" for="{{ form.rank.id_for_label }}"><i
+                                            class="fas fa-users"></i>&nbsp;&nbsp;{{ form.rank.label }}</label>
+                                    {{ form.rank }}
+                                    <script type="text/javascript">
+                                        if (document.getElementsByName('rank')[0].value != '') {
+                                            document.getElementsByName('label_rank')[0].setAttribute('class', 'active');
+                                        }
+                                    </script>
+                                    {% if form.rank.errors %}
+                                    <script type="text/javascript">
+                                        document.getElementsByName('rank')[0].setAttribute('class',
+                                            'form-control is-invalid')
+                                    </script>
+                                    {% for error in form.rank.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ error }}
+                                    </div>
+                                    {% endfor %}
+                                    {% endif %}
+                                    <small class="form-text text-muted">
+                                        직위를 입력해주세요.
+                                    </small>
+                                </div>
+
+                                <div class="mb-4 md-form">
+                                    <label name="label_grade" for="학위"><i
+                                            class="fas fa-graduation-cap"></i>&nbsp;&nbsp;학위</label>
+                                    <input type="text" class="form-control" disabled/>
+                                    <small class="form-text text-muted">
+                                        아래 빈칸에 학위를 입력해주세요.
+                                    </small>
+                                </div>
+
+                                <!--학년-->
+                                <div class="form-row">
+                                    <style>
+                                        td{
+                                            border: 1px solid #ced4da;
+                                            padding: 5px;
+                                            font-weight: 300;
+                                            color: #757575;
+                                        }
+                                        th{
+                                            font-weight: 300;
+                                            color: #757575;
+                                        }
+                                        .input_sh{
+                                            border: 0;
+                                        }
+                                        .pm{
+                                            border: 0;
+                                            font-weight: 300;
+                                            color: #757575;
+                                        }
+                                    </style>
+                                    <table id="tb1" style="margin:auto;width:600px;margin-bottom:15px;">
+                                        <tr>
+                                            <th>
+                                                <div class="mb-6 md-form" style="margin-top:0;"><h6>&nbsp;학사</h6>
+                                                </div>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <td class="sol">학교</td>
+                                            <td class="sol">학과</td>
+                                            <td class="sol">졸업여부</td>
+                                            <td class="pm">
+                                                <div>
+                                                    <span class="material-symbols-outlined" onclick="addRow1()">
+                                                    add_circle
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="sol"><input type="text" class="input_sh form-control" name="bachelor" required/></td>
+                                            <td class="sol"><input type="text" class="input_sh form-control" name="bachelor" required/></td>
+                                            <td class="sol">
+                                                <select class="input_sh form-control" name="bachelor" required>
+                                                    <option value="" selected></option>
+                                                    <option value="재학중">재학중</option>
+                                                    <option value="수료">수료</option>
+                                                    <option value="졸업">졸업</option>
+                                                </select>
+                                            </td>
+                                            <td class="pm">
+                                                <div id="sub_icon_1">
+                                                    <span class="material-symbols-outlined" onclick="subRow1(event)">
+                                                    do_not_disturb_on
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table id="tb2" style="margin:auto;width:600px;margin-bottom:15px;">
+                                        <tr>
+                                            <th>
+                                                <div class="mb-6 md-form" style="margin-top:0;"><h6>&nbsp;석사</h6>
+                                                </div>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <td class="sol">학교</td>
+                                            <td class="sol">학과</th>
+                                            <td class="sol">졸업여부</td>
+                                            <td class="pm">
+                                                <div>
+                                                    <span class="material-symbols-outlined" onclick="addRow2()">
+                                                    add_circle
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="sol"><input type="text" class="input_sh form-control" name="master" required/></td>
+                                            <td class="sol"><input type="text" class="input_sh form-control" name="master" required/></td>
+                                            <td class="sol">
+                                                <select class="input_sh form-control" name="master" required>
+                                                    <option value="" selected></option>
+                                                    <option value="재학중">재학중</option>
+                                                    <option value="수료">수료</option>
+                                                    <option value="졸업">졸업</option>
+                                                </select>
+                                            </td>
+                                            <td class="pm">
+                                                <div>
+                                                    <span class="material-symbols-outlined" onclick="subRow2(event)">
+                                                    do_not_disturb_on
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table id="tb3" style="margin:auto;width:600px;margin-bottom:15px;">
+                                        <tr>
+                                            <th>
+                                                <div class="mb-6 md-form" style="margin-top:0;"><h6>&nbsp;박사</h6>
+                                                </div>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <td class="sol">학교</td>
+                                            <td class="sol">학과</td>
+                                            <td class="sol">졸업여부</td>
+                                            <td class="pm">
+                                                <div>
+                                                    <span class="material-symbols-outlined" onclick="addRow3()">
+                                                    add_circle
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="sol"><input type="text" class="input_sh form-control" name="doctor" required/></td>
+                                            <td class="sol"><input type="text" class="input_sh form-control" name="doctor" required/></td>
+                                            <td class="sol">
+                                                <select class="input_sh form-control" name="doctor" required>
+                                                    <option value="" selected></option>
+                                                    <option value="재학중">재학중</option>
+                                                    <option value="수료">수료</option>
+                                                    <option value="졸업">졸업</option>
+                                                </select>
+                                            </td>
+                                            <td class="pm">
+                                                <div>
+                                                    <span class="material-symbols-outlined" onclick="subRow3(event)">
+                                                    do_not_disturb_on
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <script>
+                                        let rowCnt1 = 2;
+                                        let rowCnt2 = 2;
+                                        let rowCnt3 = 2;
+
+                                        function addRow1() {
+
+                                            // table element 찾기
+                                            let table = document.getElementById('tb1');
+
+                                            // 새 행(Row) 추가
+                                            let newRow = table.insertRow();
+
+                                            // 새 행(Row)에 Cell 추가
+                                            let newCell1 = newRow.insertCell(0);
+                                            let newCell2 = newRow.insertCell(1);
+                                            let newCell3 = newRow.insertCell(2);
+                                            let newCell4 = newRow.insertCell(3);
+                                            newCell1.setAttribute('class','sol');
+                                            newCell2.setAttribute('class','sol');
+                                            newCell3.setAttribute('class','sol');
+                                            newCell4.setAttribute('class','pm');
+
+
+                                            // cell 안에 입력태그 추가
+                                            let input_tag1 = document.createElement('input');
+                                            input_tag1.setAttribute('type' , 'text');
+                                            input_tag1.setAttribute('class' , 'input_sh form-control');
+                                            input_tag1.setAttribute('name' , 'bachelor');
+                                            newCell1.appendChild(input_tag1);
+
+                                            let input_tag2 = document.createElement('input');
+                                            input_tag2.setAttribute('type' , 'text');
+                                            input_tag2.setAttribute('class' , 'input_sh form-control');
+                                            input_tag2.setAttribute('name' , 'bachelor');
+                                            newCell2.appendChild(input_tag2);
+
+                                            let input_tag3 = document.createElement('select');
+                                            input_tag3.setAttribute('class' , 'input_sh form-control');
+                                            input_tag3.setAttribute('name' , 'bachelor');
+                                            newCell3.appendChild(input_tag3);
+                                            let option_tag1 = document.createElement('option');
+                                            let option_tag2 = document.createElement('option');
+                                            let option_tag3 = document.createElement('option');
+                                            let option_tag4 = document.createElement('option');
+                                            option_tag1.setAttribute('value' , '');
+                                            option_tag2.setAttribute('value' , '재학중');
+                                            option_tag3.setAttribute('value' , '수료');
+                                            option_tag4.setAttribute('value' , '졸업');
+                                            option_tag1.innerText = '';
+                                            option_tag2.innerText = '재학중';
+                                            option_tag3.innerText = '수료';
+                                            option_tag4.innerText = '졸업';
+                                            input_tag3.appendChild(option_tag1);
+                                            input_tag3.appendChild(option_tag2);
+                                            input_tag3.appendChild(option_tag3);
+                                            input_tag3.appendChild(option_tag4);
+
+                                            let div_tag = document.createElement('div');
+                                            div_tag.innerHTML = '<span class="material-symbols-outlined" onclick="subRow1(event)">do_not_disturb_on</span>';
+                                            newCell4.appendChild(div_tag);
+
+                                            rowCnt1++;
+                                        }
+
+                                        function addRow2() {
+
+                                            // table element 찾기
+                                            let table = document.getElementById('tb2');
+
+                                            // 행 갯수
+                                            let rowCnt2 = table.rows.length-1;
+
+                                            // 새 행(Row) 추가
+                                            let newRow = table.insertRow();
+
+                                            // 새 행(Row)에 Cell 추가
+                                            let newCell1 = newRow.insertCell(0);
+                                            let newCell2 = newRow.insertCell(1);
+                                            let newCell3 = newRow.insertCell(2);
+                                            let newCell4 = newRow.insertCell(3);
+                                            newCell1.setAttribute('class','sol');
+                                            newCell2.setAttribute('class','sol');
+                                            newCell3.setAttribute('class','sol');
+                                            newCell4.setAttribute('class','pm');
+
+                                            // cell 안에 입력태그 추가
+                                            let input_tag1 = document.createElement('input');
+                                            input_tag1.setAttribute('type' , 'text');
+                                            input_tag1.setAttribute('class' , 'input_sh form-control');
+                                            input_tag1.setAttribute('name' , 'master');
+                                            newCell1.appendChild(input_tag1);
+
+                                            let input_tag2 = document.createElement('input');
+                                            input_tag2.setAttribute('type' , 'text');
+                                            input_tag2.setAttribute('class' , 'input_sh form-control');
+                                            input_tag2.setAttribute('name' , 'master');
+                                            newCell2.appendChild(input_tag2);
+
+                                            let input_tag3 = document.createElement('select');
+                                            input_tag3.setAttribute('class' , 'input_sh form-control');
+                                            input_tag3.setAttribute('name' , 'master');
+                                            newCell3.appendChild(input_tag3);
+                                            let option_tag1 = document.createElement('option');
+                                            let option_tag2 = document.createElement('option');
+                                            let option_tag3 = document.createElement('option');
+                                            let option_tag4 = document.createElement('option');
+                                            option_tag1.setAttribute('value' , '');
+                                            option_tag2.setAttribute('value' , '재학중');
+                                            option_tag3.setAttribute('value' , '수료');
+                                            option_tag4.setAttribute('value' , '졸업');
+                                            option_tag1.innerText = '';
+                                            option_tag2.innerText = '재학중';
+                                            option_tag3.innerText = '수료';
+                                            option_tag4.innerText = '졸업';
+                                            input_tag3.appendChild(option_tag1);
+                                            input_tag3.appendChild(option_tag2);
+                                            input_tag3.appendChild(option_tag3);
+                                            input_tag3.appendChild(option_tag4);
+
+                                            let div_tag = document.createElement('div');
+                                            div_tag.innerHTML = '<span class="material-symbols-outlined" onclick="subRow2(event)">do_not_disturb_on</span>';
+                                            newCell4.appendChild(div_tag);
+
+                                            rowCnt2++;
+                                        }
+
+                                        function addRow3() {
+
+                                            // table element 찾기
+                                            let table = document.getElementById('tb3');
+
+                                            // 행 갯수
+                                            let rowCnt3 = table.rows.length-1;
+
+                                            // 새 행(Row) 추가
+                                            let newRow = table.insertRow();
+
+                                            // 새 행(Row)에 Cell 추가
+                                            let newCell1 = newRow.insertCell(0);
+                                            let newCell2 = newRow.insertCell(1);
+                                            let newCell3 = newRow.insertCell(2);
+                                            let newCell4 = newRow.insertCell(3);
+                                            newCell1.setAttribute('class','sol');
+                                            newCell2.setAttribute('class','sol');
+                                            newCell3.setAttribute('class','sol');
+                                            newCell4.setAttribute('class','pm');
+
+                                            // cell 안에 입력태그 추가
+                                            let input_tag1 = document.createElement('input');
+                                            input_tag1.setAttribute('type' , 'text');
+                                            input_tag1.setAttribute('class' , 'input_sh form-control');
+                                            input_tag1.setAttribute('name' , 'doctor');
+                                            newCell1.appendChild(input_tag1);
+
+                                            let input_tag2 = document.createElement('input');
+                                            input_tag2.setAttribute('type' , 'text');
+                                            input_tag2.setAttribute('class' , 'input_sh form-control');
+                                            input_tag2.setAttribute('name' , 'doctor');
+                                            newCell2.appendChild(input_tag2);
+
+                                            let input_tag3 = document.createElement('select');
+                                            input_tag3.setAttribute('class' , 'input_sh form-control');
+                                            input_tag3.setAttribute('name' , 'doctor');
+                                            newCell3.appendChild(input_tag3);
+                                            let option_tag1 = document.createElement('option');
+                                            let option_tag2 = document.createElement('option');
+                                            let option_tag3 = document.createElement('option');
+                                            let option_tag4 = document.createElement('option');
+                                            option_tag1.setAttribute('value' , '');
+                                            option_tag2.setAttribute('value' , '재학중');
+                                            option_tag3.setAttribute('value' , '수료');
+                                            option_tag4.setAttribute('value' , '졸업');
+                                            option_tag1.innerText = '';
+                                            option_tag2.innerText = '재학중';
+                                            option_tag3.innerText = '수료';
+                                            option_tag4.innerText = '졸업';
+                                            input_tag3.appendChild(option_tag1);
+                                            input_tag3.appendChild(option_tag2);
+                                            input_tag3.appendChild(option_tag3);
+                                            input_tag3.appendChild(option_tag4);
+
+                                            let div_tag = document.createElement('div');
+                                            div_tag.innerHTML = '<span class="material-symbols-outlined" onclick="subRow3(event)">do_not_disturb_on</span>';
+                                            newCell4.appendChild(div_tag);
+
+                                            rowCnt3++;
+                                        }
+
+                                        function subRow1(event) {
+                                            const tr = event.target.parentNode.parentNode.parentNode;
+                                            const tr_ind1 = tr.rowIndex;
+                                            // table element 찾기
+                                            const table = document.getElementById('tb1');
+
+                                            // 행 갯수
+                                            let rowCnt1 = table.rows.length;
+
+                                            if (rowCnt1 != 3) {
+                                                table.deleteRow(tr_ind1);
+                                            }
+                                        }
+
+                                         function subRow2(event) {
+                                            const tr = event.target.parentNode.parentNode.parentNode;
+                                            const tr_ind2 = tr.rowIndex;
+                                            // table element 찾기
+                                            const table = document.getElementById('tb2');
+
+                                            // 행 갯수
+                                            let rowCnt2 = table.rows.length;
+
+                                            if (rowCnt2 != 3) {
+                                                table.deleteRow(tr_ind2);
+                                            }
+                                        }
+
+                                         function subRow3(event) {
+                                            const tr = event.target.parentNode.parentNode.parentNode;
+                                            const tr_ind3 = tr.rowIndex;
+                                            // table element 찾기
+                                            const table = document.getElementById('tb3');
+
+                                            // 행 갯수
+                                            let rowCnt3 = table.rows.length;
+
+                                            if (rowCnt3 != 3) {
+                                                table.deleteRow(tr_ind3);
+                                            }
+                                        }
+                                    </script>
+                                </div>
+
+                                <br>
+                                <button id="regi_btn" type="submit" style="opacity: 90%; font-size: 16px; margin-top: -5px;"
+                                    class="btn btn-blue btn-md btn-block">회원가입</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

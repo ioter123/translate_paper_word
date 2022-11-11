@@ -1,0 +1,259 @@
+{% extends "main_base.html" %}
+
+{% block mobileView %}
+<meta name="viewport" content="width=550, user-scalable=yes">
+{% endblock %}
+
+{% block contents %}
+<style>
+    th{
+        border:0;
+    }
+</style>
+<div class="container">
+    <div style="margin-top: 5rem !important;">
+        <div class="col-12">
+
+            <div class="row justify-content-center">
+                <div class="card">
+                    <div class="card-header" style="padding-bottom:8px;">
+                        <strong style="font-size: 18px;"><i class="fas fa-user-cog"></i>&nbsp;&nbsp;회원 정보</strong>
+                    </div>
+                    <div class="card-body">
+                        <table style="color:black; margin-left:10px;">
+                            <colgroup>
+                                <col width="20%"/>
+                                <col width="80%"/>
+                            </colgroup>
+                            <tr>
+                                <td class="profile_title">이메일</td>
+                                {% if user.level == '0'%}
+                                <td class="profile_content">{{ user.email }}&nbsp;&nbsp;(개발자)</td>
+                                {% elif user.level == '1' %}
+                                <td class="profile_content">{{ user.email }}&nbsp;&nbsp;(관리자)</td>
+                                {% else %}
+                                <td class="profile_content">{{ user.email }}</td>
+                                {% endif %}
+                            </tr>
+                            <tr>
+                                <td class="profile_title">이름</td>
+                                <td class="profile_content">{{ user.name }}</td>
+                            </tr>
+                            <tr>
+                                <td class="profile_title">연락처</td>
+                                <td class="profile_content">{{ user.phone }}</td>
+                            </tr>
+                            <tr>
+                                <td class="profile_title">관심분야</td>
+                                <td class="profile_content">{{ user.interest }}</td>
+                            </tr>
+                            <tr>
+                                <td class="profile_title">소속</td>
+                                <td class="profile_content">{{ user.belong }}</td>
+                            </tr>
+                            <tr>
+                                <td class="profile_title">직위</td>
+                                <td class="profile_content">{{ user.rank }}</td>
+                            </tr>
+                            <tr>
+                                <td class="profile_title">학위</td>
+                                <td class="profile_content">
+                                    <style>
+                                        td{
+                                            border: 1px solid #ced4da;
+                                            padding: 5px;
+                                            font-weight: 300;
+                                            color: #757575;
+                                        }
+                                        th{
+                                            font-weight: 300;
+                                            color: #757575;
+                                        }
+                                        .input_sh{
+                                            border: 0;
+                                        }
+                                    </style>
+                                    <table id="tb1" style="margin:auto;margin-bottom:15px;width:100%;">
+                                        <colgroup>
+                                            <col width="33%"/>
+                                            <col width="33%"/>
+                                            <col width="33%"/>
+                                        </colgroup>
+                                        <tr>
+                                            <th>
+                                                <div class="mb-6 md-form" style="margin-top:0;"><h6>&nbsp;학사</h6>
+                                                </div>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <td class="sol">학교</td>
+                                            <td class="sol">학과</td>
+                                            <td class="sol">졸업여부</td>
+                                        </tr>
+                                    </table>
+                                    <table id="tb2" style="margin:auto;margin-bottom:15px;width:100%;">
+                                        <colgroup>
+                                            <col width="33%"/>
+                                            <col width="33%"/>
+                                            <col width="33%"/>
+                                        </colgroup>
+                                        <tr>
+                                            <th>
+                                                <div class="mb-6 md-form" style="margin-top:0;"><h6>&nbsp;석사</h6>
+                                                </div>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <td class="sol">학교</td>
+                                            <td class="sol">학과</td>
+                                            <td class="sol">졸업여부</td>
+
+                                        </tr>
+                                    </table>
+                                    <table id="tb3" style="margin:auto;margin-bottom:15px;width:100%;">
+                                        <colgroup>
+                                            <col width="33%"/>
+                                            <col width="33%"/>
+                                            <col width="33%"/>
+                                        </colgroup>
+                                        <tr>
+                                            <th>
+                                                <div class="mb-6 md-form" style="margin-top:0;"><h6>&nbsp;박사</h6>
+                                                </div>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <td class="sol">학교</td>
+                                            <td class="sol">학과</td>
+                                            <td class="sol">졸업여부</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="profile_title">관리자 유무</td>
+                                <td class="profile_content">
+                                    {% if user.is_admin %}
+                                    관리자
+                                    {% else %}
+                                    일반 회원
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="profile_title">탈퇴 유무</td>
+                                <td class="profile_content">
+                                    {% if user.is_out %}
+                                    탈퇴 회원
+                                    {% else %}
+                                    유효 회원
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </table>
+                        <script>
+                            {% load split %}
+                            var table1 = document.getElementById('tb1');
+                            console.log('{{user.bachelor}}');
+                            {% with user.bachelor|split:"/" as bachelors %}
+                                {% for bachelor in bachelors %}
+                                console.log('{{bachelor}}');
+                                    {% with forloop.counter|divi:3 as num %}
+                                    {% if num == 1 %}
+                                    var newRow1 = table1.insertRow();
+                                    var newCell1 = newRow1.insertCell(0);
+                                    newCell1.setAttribute('class','sol');
+                                    newCell1.innerText = '{{ bachelor }}';
+                                    {% endif %}
+                                    {% endwith %}
+
+                                    {% with forloop.counter|divi:3 as num %}
+                                    {% if num == 2 %}
+                                    var newCell2 = newRow1.insertCell(1);
+                                    newCell2.setAttribute('class','sol');
+                                    newCell2.innerText = '{{ bachelor }}';
+                                    {% endif %}
+                                    {% endwith %}
+
+                                    {% with forloop.counter|divi:3 as num %}
+                                    {% if num == 0 %}
+                                    var newCell3 = newRow1.insertCell(2);
+                                    newCell3.setAttribute('class','sol');
+                                    newCell3.innerText = '{{ bachelor }}';
+                                    {% endif %}
+                                    {% endwith %}
+                                {% endfor %}
+                            {% endwith %}
+                            var table2 = document.getElementById('tb2');
+                            {% with user.master|split:"/" as masters %}
+                                {% for master in masters %}
+                                    {% with forloop.counter|divi:3 as num %}
+                                    {% if num == 1 %}
+                                    var newRow2 = table2.insertRow();
+                                    var newCell1 = newRow2.insertCell(0);
+                                    newCell1.setAttribute('class','sol');
+                                    newCell1.innerText = '{{ master }}';
+                                    {% endif %}
+                                    {% endwith %}
+
+                                    {% with forloop.counter|divi:3 as num %}
+                                    {% if num == 2 %}
+                                    var newCell2 = newRow2.insertCell(1);
+                                    newCell2.setAttribute('class','sol');
+                                    newCell2.innerText = '{{ master }}';
+                                    {% endif %}
+                                    {% endwith %}
+
+                                    {% with forloop.counter|divi:3 as num %}
+                                    {% if num == 0 %}
+                                    var newCell3 = newRow2.insertCell(2);
+                                    newCell3.setAttribute('class','sol');
+                                    newCell3.innerText = '{{ master }}';
+                                    {% endif %}
+                                    {% endwith %}
+                                {% endfor %}
+                            {% endwith %}
+                            var table3 = document.getElementById('tb3');
+                            {% with user.doctor|split:"/" as doctors %}
+                                {% for doctor in doctors %}
+                                    {% with forloop.counter|divi:3 as num %}
+                                    {% if num == 1 %}
+                                    var newRow3 = table3.insertRow();
+                                    var newCell1 = newRow3.insertCell(0);
+                                    newCell1.setAttribute('class','sol');
+                                    newCell1.innerText = '{{ doctor }}';
+                                    {% endif %}
+                                    {% endwith %}
+
+                                    {% with forloop.counter|divi:3 as num %}
+                                    {% if num == 2 %}
+                                    var newCell2 = newRow3.insertCell(1);
+                                    newCell2.setAttribute('class','sol');
+                                    newCell2.innerText = '{{ doctor }}';
+                                    {% endif %}
+                                    {% endwith %}
+
+                                    {% with forloop.counter|divi:3 as num %}
+                                    {% if num == 0 %}
+                                    var newCell3 = newRow3.insertCell(2);
+                                    newCell3.setAttribute('class','sol');
+                                    newCell3.innerText = '{{ doctor }}';
+                                    {% endif %}
+                                    {% endwith %}
+                                {% endfor %}
+                            {% endwith %}
+                        </script>
+                        <hr>
+                        <div style="text-align: center;">
+                        <!-- <div style="margin-left: 10px;"> -->
+                            <a href="edit/" style="color:#1d2a58; font-size:15px;"><i class="fas fa-user-edit"></i>&nbsp;회원정보수정</a>&nbsp;&middot;&nbsp;
+                            <a href="delete/" style="color:#1d2a58; font-size:15px;"><i class="fas fa-user-slash"></i>&nbsp;회원탈퇴</a> <br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
