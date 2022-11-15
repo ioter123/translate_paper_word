@@ -19,8 +19,53 @@
         margin:auto;
     }
 }
+.main_ment{
+    width:70%;
+    text-align:center;
+    margin:auto;
+    margin-top:20px;
+    margin-bottom:20px;
+    padding:20px 0;
+    display:block;
+}
+
+.sub_ment{
+    width:70%;
+    text-align:center;
+    margin:auto;
+    margin-bottom:60px;
+    padding:20px 0;
+    border-bottom:1px double gray;
+    display:block;
+}
+.sys_info{
+    width:70%;
+    text-align:left;
+    margin:auto;
+}
 </style>
 <main style="margin-top:3%;">
+    <div class='main_ment'>
+        <h1><b>HAI reseacher</b> 연구자 플랫폼 시스템 접속을 환영합니다.</h1>
+    </div>
+    <div class='sub_ment'>
+        {% if user.is_authenticated %}
+        <h4></h4>
+        {% else %}
+        <h4>로그인을 하시면 시스템 기능을 이용하실 수 있습니다.</h4>
+        {% endif %}
+    </div>
+    <div class='sys_info'>
+        <h3>
+            <span class="material-symbols-outlined">
+                format_quote
+            </span>
+            시스템 소개
+            <span class="material-symbols-outlined">
+                format_quote
+            </span>
+        </h3>
+    </div>
     <div  class="img_main">
         <img src="{% static 'img/mission.png' %}" style="width:100%; margin:auto;">
     </div>

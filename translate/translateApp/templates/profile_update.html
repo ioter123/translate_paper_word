@@ -29,7 +29,7 @@
                                 </colgroup>
                                 <tr>
                                     <td class="profile_title">이메일</td>
-                                    <td class="profile_content">&nbsp;&nbsp;&nbsp;{{ user.email }}</td>
+                                    <td class="profile_content">&nbsp;&nbsp;&nbsp;{{ user_change_form.email }}</td>
                                 </tr>
                                 <style>
                                     .input_st{
@@ -57,119 +57,132 @@
                                     <td class="profile_content">{{ user_change_form.interest }}
                                         <div class="minwon" style="vertical-align: middle; display:inline-block;">
                                             <div>
-                                              <i onclick="show_inter();" class="fa-solid fa-magnifying-glass"></i>
+                                              <i onclick="show_inter();click_select();" class="fa-solid fa-magnifying-glass"></i>
+                                            </div>
+                                        </div>
+                                        <script>
+
+                                        </script>
+                                        <div class="background" id="background">
+                                            <div class="window">
+                                              <div class="popup">
+                                                  <div class="card-body form-body">
+                                                      <div id="fcf-form col-12">
+                                                          <h3 class="fcf-h3">관심 분야</h3>
+                                                          <div style="width:100%;">
+
+                                                              <!--<div style="height:50px;margin-right:10px; display:inline-block;">
+                                                                  <label>
+                                                                      <input type="checkbox" class="part_check" id="part_{{forloop.counter}}" name="part_{{forloop.counter}}" value="{{p.part_name}}"/>
+                                                                      <span style="font-weight: bold;">{{p.part_name}}</span>
+                                                                  </label>
+                                                              </div>-->
+                                                              <table id="inputTable" border="0" hidden>
+                                                                    {% for p in part %}
+                                                                    <tr>
+                                                                        <td>{{p.id}}</td>
+                                                                        <td>{{p.part_1_code}}</td>
+                                                                        <td>{{p.part_1_name}}</td>
+                                                                        <td>{{p.part_2_code}}</td>
+                                                                        <td>{{p.part_2_name}}</td>
+                                                                        <td>{{p.code}}</td>
+                                                                        <td>{{p.name}}</td>
+                                                                    </tr>
+                                                                    {% endfor %}
+                                                                </table>
+                                                                <div id="multiPick">
+                                                                    {% for p in part %}
+                                                                    <span value="{{p.code}}" hidden>{{p.part_1_code}}#{{p.part_1_name}}#{{p.part_2_code}}#{{p.part_2_name}}#{{p.code}}#{{p.name}}</span>
+                                                                    {% endfor %}
+                                                                </div>
+                                                                <div id="multiPick2">
+                                                                    {% for p in part %}
+                                                                    <span value="{{p.code}}" hidden>{{p.part_1_code}}#{{p.part_1_name}}#{{p.part_2_code}}#{{p.part_2_name}}#{{p.code}}#{{p.name}}</span>
+                                                                    {% endfor %}
+                                                                </div>
+                                                          </div>
+                                                          <script>
+                                                            $('#multiPick').multiPick({
+                                                                limit: 1000,
+                                                                image: false,
+                                                                closeAfterSelect: false,
+                                                                search: true,
+                                                                placeholder: 'Select',
+                                                                slim: false
+                                                            });
+
+                                                          </script>
+                                                          <div class="form-group">
+                                                              <span id="fcf-button" class="btn btn-blue btn-md" onclick="part_ok();" style="margin:10px;">확인</span>
+                                                              <span id="fcf-button2" class="btn btn-blue btn-md" onclick="close_btn();">닫기</span>
+                                                          </div>
+                                                          <script type="text/javascript">
+                                                            var id_interest = document.getElementById('id_interest');
+                                                            id_interest.setAttribute('class', 'form-control input_st');
+                                                            id_interest.setAttribute('readonly', '');
+                                                            id_interest.setAttribute('style', 'display: inline;');
+
+                                                            var close_btn = document.getElementById('fcf-button2');
+                                                            close_btn.onclick = close;
+
+                                                            function show_inter() {
+                                                                document.querySelector(".background").className = "background show";
+                                                            }
+
+                                                            function close() {
+                                                                //console.log('ok');
+                                                                var background = document.getElementById('background');
+                                                                background.setAttribute('class',"background");
+                                                            }
+
+                                                            function part_ok() {
+                                                                var part_text = '';
+
+                                                                var part_check = document.getElementsByClassName('item');
+                                                                for (var i=0; i<part_check.length; i++){
+                                                                    part_text = part_text + '#' + part_check[i].innerText + ' ';
+                                                                }
+
+                                                                //console.log(part_text);
+                                                                var interest = document.getElementById('id_interest');
+                                                                interest.value = part_text;
+                                                                document.querySelector(".background").className = "background";
+                                                                //var label_interest = document.getElementsByName('label_interest')[0];
+                                                                //label_interest.setAttribute('class','active');
+                                                            }
+
+                                                            function click_select(){
+                                                                var inter_str = document.getElementById('id_interest').value;
+                                                                //console.log(inter_str);
+                                                                var words = inter_str.split('#');
+                                                                var code = [];
+                                                                var name = [];
+                                                                {% for p in part %}
+                                                                    code[{{forloop.counter0}}] = "{{p.code}}".toUpperCase();
+                                                                    name[{{forloop.counter0}}] = "{{p.name}}".toUpperCase();
+                                                                {% endfor %}
+                                                                //console.log(name);
+                                                                for (var i=1; i<words.length; i++){
+                                                                    var word = words[i].trim();
+                                                                    //console.log(code[name.indexOf(word)]);
+                                                                    if (name.includes(word.toUpperCase())){
+                                                                        part_select_show(code[name.indexOf(word.toUpperCase())],word);
+                                                                    }
+
+                                                                }
+                                                            }
+
+
+                                                        </script>
+                                                      </div>
+                                                  </div>
+                                              </div>
                                             </div>
                                         </div>
                                     </td>
                                 </tr>
-                                <div class="background" id="background">
-                                    <div class="window">
-                                      <div class="popup">
-                                          <div class="card-body form-body">
-                                              <div id="fcf-form col-12">
-                                                  <h3 class="fcf-h3">관심 분야</h3>
-                                                  <div style="width:100%;">
-
-                                                      <!--<div style="height:50px;margin-right:10px; display:inline-block;">
-                                                          <label>
-                                                              <input type="checkbox" class="part_check" id="part_{{forloop.counter}}" name="part_{{forloop.counter}}" value="{{p.part_name}}"/>
-                                                              <span style="font-weight: bold;">{{p.part_name}}</span>
-                                                          </label>
-                                                      </div>-->
-                                                      <table id="inputTable" border="0" hidden>
-                                                            {% for p in part %}
-                                                            <tr>
-                                                                <td>{{p.id}}</td>
-                                                                <td>{{p.part_1_code}}</td>
-                                                                <td>{{p.part_1_name}}</td>
-                                                                <td>{{p.part_2_code}}</td>
-                                                                <td>{{p.part_2_name}}</td>
-                                                                <td>{{p.code}}</td>
-                                                                <td>{{p.name}}</td>
-                                                            </tr>
-                                                            {% endfor %}
-                                                        </table>
-                                                        <div id="multiPick">
-                                                            {% for p in part %}
-                                                            <span value="{{p.code}}" hidden>{{p.part_1_code}}#{{p.part_1_name}}#{{p.part_2_code}}#{{p.part_2_name}}#{{p.code}}#{{p.name}}</span>
-                                                            {% endfor %}
-                                                        </div>
-                                                        <div id="multiPick2">
-                                                            {% for p in part %}
-                                                            <span value="{{p.code}}" hidden>{{p.part_1_code}}#{{p.part_1_name}}#{{p.part_2_code}}#{{p.part_2_name}}#{{p.code}}#{{p.name}}</span>
-                                                            {% endfor %}
-                                                        </div>
-                                                  </div>
-                                                  <script>
-                                                    $('#multiPick').multiPick({
-                                                        limit: 1000,
-                                                        image: false,
-                                                        closeAfterSelect: false,
-                                                        search: true,
-                                                        placeholder: 'Select',
-                                                        slim: false
-                                                    });
-
-                                                  </script>
-                                                  <div class="form-group">
-                                                      <span id="fcf-button" class="btn btn-blue btn-md" onclick="part_ok();" style="margin:10px;">확인</span>
-                                                      <span id="fcf-button2" class="btn btn-blue btn-md" onclick="close();">닫기</span>
-                                                  </div>
-                                              </div>
-                                          </div>
-                                      </div>
-                                    </div>
-                                </div>
-                                <script type="text/javascript">
-                                    var id_interest = document.getElementById('id_interest');
-                                    id_interest.setAttribute('class', 'form-control input_st');
-                                    id_interest.setAttribute('readonly', '');
-                                    id_interest.setAttribute('style', 'display: inline;');
-
-                                    var close_btn = document.getElementById('fcf-button2');
-                                    close_btn.onclick = close;
-
-                                    function show_inter() {
-                                        document.querySelector(".background").className = "background show";
-                                    }
-
-                                    function close() {
-                                        console.log('ok');
-                                        var background = document.getElementById('background');
-                                        background.setAttribute('class',"background");
-                                    }
-
-                                    function part_ok() {
-                                        var part_text = '';
 
 
-                                        var part_check = document.getElementsByClassName('part_check');
-                                        for (var i=0; i<part_check.length; i++){
-                                            if (part_check[i].checked) {
-                                                part_text = part_text + '#' + part_check[i].value + ' ';
-                                            }
-                                        }
-
-                                        //console.log(part_text);
-                                        var interest = document.getElementsByName('interest')[0];
-                                        interest.value = part_text;
-                                        document.querySelector(".background").className = "background";
-                                        var label_interest = document.getElementsByName('label_interest')[0];
-                                        label_interest.setAttribute('class','active');
-                                    }
-
-
-
-                                    var inter_str = document.getElementById('id_interest').value;
-                                    console.log(inter_str);
-                                    var words = inter_str.split('#');
-                                    console.log(words);
-                                    for (var i=1; i<words.length; i++){
-                                        var word = words[i].trim();
-                                        var check_word = document.getElementById('part_'+word);
-                                        check_word.setAttribute('checked', '');
-                                    }
-                                </script>
                                 <tr>
                                     <td class="profile_title">소속</td>
                                     <td class="profile_content">{{ user_change_form.belong }}</td>
@@ -769,7 +782,7 @@
                                     var master_class = document.getElementsByName('master1');
                                     var doctor_class = document.getElementsByName('doctor1');
 
-                                    console.log(bachelor_class[0].value);
+                                    //console.log(bachelor_class[0].value);
                                     bachelor_val = bachelor_class[0].value;
                                     master_val = master_class[0].value;
                                     doctor_val = doctor_class[0].value;
@@ -794,12 +807,12 @@
                                 <button type="submit" class="btn btn-sm" id="detail_btn"><i class="fas fa-check"></i>&nbsp;수정하기</button>
                             </div>
                         </form>
-                        
+
                         <script type = "text/javascript">
                             function maxLengthCheck(object){
                                 if (object.value.length > object.maxLength) {
                                     object.value = object.value.slice(0, object.maxLength);
-                                    }   
+                                    }
                                 }
                         </script>
                     </div>

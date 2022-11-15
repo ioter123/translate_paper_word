@@ -4,7 +4,7 @@ from django.urls import path, include
 from .views import *
 
 urlpatterns = [
-    path('main/', main, name='main'),
+    path('', main, name='main'),
     path('publicadministration/', publicadministration, name='publicadministration'),
     path('paperdbinsert/', paperDBInsert, name='paperDBInsert'),
     path('researchpartinsert/', research_part_insert, name='researchpartinsert'),
@@ -28,5 +28,6 @@ urlpatterns = [
     path('user_list/<int:pk>/', user_detail_view, name='user_detail'),
     path('user_list/<int:pk>/edit/', user_edit_view, name='user_edit'),
     path('user_list/<int:pk>/delete/', user_delete_view, name='user_delete'),
+    path('guide', guide, name='guide'),
 
 ]

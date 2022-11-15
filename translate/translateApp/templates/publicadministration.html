@@ -32,7 +32,7 @@
       <h1 style="font-family: 'Playfair Display', serif; font-weight:300;">Welcome to HAI Researcher's system for writing SSCI articles in Public Administration</h1>
       <h3>영어 단어 혹은 문장을 아래 빈칸에 입력한 후 Search 버튼을 누르세요.</h3>
       <hr>
-      <form action="{% url 'home' %}" method="POST">
+      <form action="{% url 'publicadministration' %}" method="POST" id='search_form'>
         {% csrf_token %}
         <div class="box1">
           <!--<input tpye="text" name="startWord" id="startWord" style="text-align:left; width:100%; height:200px;" value="{{startWord}}"/> -->
@@ -57,15 +57,16 @@
             <col width="10%">
             <col width="10%">
             <col width="10%">
-            <col width="50%">
+            <col width="45%">
+            <col width="5%">
           </colgroup>
           <tr>
-            <th style="font-weight:600;">word</th>
-            <th style="font-weight:600;">synonym</th>
-            <th style="font-weight:600;">synonym_search</th>
-            <th style="font-weight:600;">tag</th>
-            <th style="font-weight:600;">count</th>
-            <th style="font-weight:600;">sentence</th>
+            <th style="font-weight:600;">단어</th>
+            <th style="font-weight:600;">동의어</th>
+            <th style="font-weight:600;">동의어 여부</th>
+            <th style="font-weight:600;">품사</th>
+            <th style="font-weight:600;">사용횟수</th>
+            <th style="font-weight:600;">문장</th>
           </tr>
           <tr>
             <th><input type="text" class="filter_input"></th>
@@ -122,30 +123,46 @@
                     <div class="tooltip1">
                       <div class="sentence sentence_{{words.word}}">{{forloop.counter}}. {{w.sentence}}
                       </div>
-                      <i class="fa-solid fa-magnifying-glass" id="search_icon_{{words.word}}_{{forloop.counter}}" style="position: absolute;right: 5px;top: 50%;"></i>
+                      <i class="fa-solid fa-magnifying-glass" id="search_icon_{{words.word}}_{{forloop.counter}}" style="position: absolute;right:5%;top: 50%;"></i>
+                      <span style="position: absolute;right:-3%;top: 49%;">
+                         <input type='checkbox' name='ck_{{w.id}}' id='{{w.id}}' value='{{w.error_sentence}}' form='search_form'/>
+                         <input type='hidden' name='sentence_id' id='sentence_id_{{w.id}}' value='{{w.id}}' form='search_form'/>
+                         <script>
+                             $('#{{w.id}}').change(function(){
+                                var error_sentence = this.value;
+                                console.log(error_sentence);
+                                  if(error_sentence === 'True'){
+                                      this.value='False';
+                                  }else{
+                                      this.value='True';
+                                  }
+                              });
+                         </script>
+                      </span>
                       <span class="tooltiptext tooltip-right" id="tooltiptext_{{words.word}}_{{forloop.counter}}">
-                        * title : {{w.title}} <br/>
-                        * author : {{w.author}} <br/>
-                        * journal : {{w.journal}} <br/>
-                        * year : {{w.date}} <br/>
-                        * google scalar : <i class="fa-solid fa-magnifying-glass" onclick="openInNewTab('https://scholar.google.co.kr/scholar?q={{w.title}}');"></i>
+                        * 제목 : {{w.title}} <br/>
+                        * 저자 : {{w.author}} <br/>
+                        * 학술지 : {{w.journal}} <br/>
+                        * 게재년도 : {{w.date}} <br/>
+                        * 구글 학술 검색 링크 : <i class="fa-solid fa-magnifying-glass" onclick="openInNewTab('https://scholar.google.co.kr/scholar?q={{w.title}}');"></i>
                       </span>
                     </div>
                   {% endfor %}
                 </div>
               </div>
-            </td>
           </tr>
           {% endfor %}
         </table>
 
         {% endif %}
       </div>
+      <input type="submit" style="" value="Re Search" form='search_form'/>
     </div>
     </div>
   </main>
 
   <script>
+
     function dropdown(word) {
       document.querySelector('.dropdown-content_'+word).classList.toggle('show_sent');
     }
@@ -159,7 +176,7 @@
     }
 
     function showDrop(value, tg) {
-      console.log(tg.className);
+      //console.log(tg.className);
       var dropbtn_content = document.querySelector('.dropbtn_content_'+tg.className);
       var dropbtn  = document.querySelector('.dropbtn-'+tg.className);
 
@@ -237,7 +254,7 @@
 
         for (var i=0; i<content.length; i++) {
           sentence = content[i].childNodes[1].innerHTML;
-          console.log(sentence);
+          //console.log(sentence);
           match_word = sentence.match(/{{words.word}}/i);
           content[i].childNodes[1].innerHTML = sentence.replaceAll(/{{words.word}}/i,'<b>'+match_word[0]+'</b>')
           //console.log(sentence.replaceAll(/{{words.word}}/i,'<b>{{words.word}}</b>'));

@@ -11,7 +11,7 @@ $.fn.extend({
             slim: false
         }, config);
 
-        //Cria o elemento de multilesect        
+        //Cria o elemento de multilesect
         let item = $(this);
         let id = $(this).prop('id');
         let options = $(`#${id} span`);
@@ -232,7 +232,7 @@ $.fn.extend({
         let settings = JSON.parse($(this).data('settings').replaceAll(`'`, `"`));
 
         $.each(itens, function (i, v) {
-            console.log($(v).data('img'));
+            //console.log($(v).data('img'));
             if (settings.image === true) {
                 itemFormat += `<div class="option-item" data-value="${$(v).val()}" id="${$(v).text()}">
                                     <div class="image" style="background-image: url(${ $(v).data('img')})" data-image="${ $(v).data('img')}"></div>
@@ -522,7 +522,7 @@ function select_part(e) {
     var settings = $.extend({
             limit: 1000,
             image: false,
-            closeAfterSelect: true,
+            closeAfterSelect: false,
             search: false,
             placeholder: 'Select',
             slim: false
@@ -534,8 +534,8 @@ function select_part(e) {
 
     //let Imagem = e.target.find('.image').data('image');
     let text = e.target.innerText;
-    let value = $('.option-item').innerText;
-
+    let value = e.target.id;
+    //console.log(e.target);
     let itens = $(`#${id}`).find(`.main-content .selected-itens .item`);
 
     let selectedContentWidth = $(`#${id}`).find(`.main-content .selected-itens`).width();
@@ -545,8 +545,8 @@ function select_part(e) {
     //Verifica se o item já existe dentro dos selecionados
     for (var i = 0; i < itens.length; i++) {
         let item = itens[i];
-
-        if (value == $(item).data('value'))
+        //console.log($(item));
+        if (value == $(item).prop("id").slice(5))
             same = true;
     }
 
@@ -558,10 +558,7 @@ function select_part(e) {
     //console.log(same);
 
     if ($('#multiPick').prop('id') !== 'search' && itens.length < settings.limit && same === false) {
-        $(`#${id}`).find(`.selected-itens`).append(`<div class="item" data-value="${value}">
-                                                ${imageblock}
-                                                ${text}
-                                                <button type="button" class="btn-remove">
+        $(`#${id}`).find(`.selected-itens`).append(`<div class="item" id="item_${value}">${text}<button type="button" class="btn-remove">
 
                                                     <?xml version="1.0" encoding="utf-8"?>
                                                     <!-- Generator: Adobe Illustrator 24.2.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
@@ -596,7 +593,7 @@ function select_part(e) {
                 //console.log(selectedContentWidth,  itensWidth);
 
                 if(selectedContentWidth < itensWidth){
-                    console.log('teste');
+                    //console.log('teste');
                     //$(item).hide();
                 }else{
                     $(item).show();
@@ -629,3 +626,87 @@ function select_part(e) {
     placeHide();
 }
 
+
+function part_select_show(value, text) {
+
+    let id = $('#multiPick').prop('id');
+    let same = false;
+    let itens = $(`#${id}`).find(`.main-content .selected-itens .item`);
+    let selectedContentWidth = $(`#${id}`).find(`.main-content .selected-itens`).width();
+    //Verifica se o item já existe dentro dos selecionados
+
+    for (var i = 0; i < itens.length; i++) {
+        let item = itens[i];
+        //console.log($(item));
+        if (value == $(item).prop("id").slice(5))
+            same = true;
+    }
+
+    if ($('#multiPick').prop('id') !== 'search' && same === false) {
+        $(`#${id}`).find(`.selected-itens`).append(`<div class="item" id="item_${value}">${text}<button type="button" class="btn-remove">
+
+                                                        <?xml version="1.0" encoding="utf-8"?>
+                                                        <!-- Generator: Adobe Illustrator 24.2.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+                                                        <svg version="1.1" id="Camada_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                                                            viewBox="0 0 20 20" style="enable-background:new 0 0 20 20;" xml:space="preserve">
+                                                        <style type="text/css">
+                                                            .st0{fill:#FFFFFF;}
+                                                        </style>
+                                                        <g>
+                                                            <path class="st0" d="M19.2,0.8L19.2,0.8c-0.63-0.63-1.66-0.63-2.3,0L10,7.7L3.1,0.8c-0.63-0.63-1.66-0.63-2.3,0l0,0
+                                                                c-0.63,0.63-0.63,1.66,0,2.3L7.7,10l-6.9,6.9c-0.63,0.63-0.63,1.66,0,2.3l0,0c0.63,0.63,1.66,0.63,2.3,0l6.9-6.9l6.9,6.9
+                                                                c0.63,0.63,1.66,0.63,2.3,0l0,0c0.63-0.63,0.63-1.66,0-2.3L12.3,10l6.9-6.9C19.83,2.47,19.83,1.44,19.2,0.8z"/>
+                                                        </g>
+                                                        </svg>
+
+                                                    </button>
+                                                </div>`);
+
+
+
+
+        $(`#${id}`).find(`.btn-remove`).click(function (e) {
+            e.stopPropagation();
+
+            $(this).parent().remove();
+
+            let refreshItens = $(`#${id}`).find(`.main-content .selected-itens .item`);
+            let itensWidth = 0;
+            for (var i = 0; i < refreshItens.length; i++) {
+                let item = refreshItens[i];
+                itensWidth += $(item).width()+60;
+
+                //console.log(selectedContentWidth,  itensWidth);
+
+                if(selectedContentWidth < itensWidth){
+                    //console.log('teste');
+                    //$(item).hide();
+                }else{
+                    $(item).show();
+                }
+            }
+            placeHide();
+        });
+    }
+
+    let refreshItens = $(`#${id}`).find(`.main-content .selected-itens .item`);
+    let itensWidth = 0;
+
+    for (var i = 0; i < refreshItens.length; i++) {
+        let item = refreshItens[i];
+        itensWidth += $(item).width()+60;
+
+        //console.log(selectedContentWidth,  itensWidth);
+
+        if(selectedContentWidth < itensWidth){
+
+            $(`#${id}`).find(`.main-content .selected-itens`).addClass('more')
+
+            //$(item).hide();
+        }else{
+            $(item).show();
+        }
+    }
+    placeHide();
+
+}

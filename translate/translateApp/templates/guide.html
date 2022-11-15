@@ -1,0 +1,80 @@
+{% extends "main_base.html" %}
+
+{% block mobileView %}
+<meta name="viewport" content="width=550, user-scalable=yes">
+{% endblock %}
+
+{% block contents %}
+{% load static %}
+<style>
+@media (max-width: 800px) {
+  .img_main {
+    width:100%;
+    margin:auto;
+    padding:10px;
+    padding-top:5%;
+    border:1px solid gray;
+  }
+}
+@media (min-width: 800px) {
+    .img_main {
+        width:70%;
+        margin:auto;
+        padding:10px;
+        padding-top:5%;
+        border:1px solid gray;
+    }
+}
+.main_ment{
+    width:70%;
+    text-align:center;
+    margin:auto;
+    margin-top:20px;
+    margin-bottom:20px;
+    padding:20px 0;
+    display:block;
+}
+
+.sub_ment{
+    width:70%;
+    text-align:center;
+    margin:auto;
+    margin-bottom:60px;
+    padding:20px 0;
+    border-bottom:1px double gray;
+    display:block;
+}
+.sys_info{
+    width:70%;
+    text-align:left;
+    margin:auto;
+    margin-bottom:50px;
+}
+</style>
+<main style="margin-top:3%;">
+    <div class='main_ment'>
+        <h1><b>HAI reseacher</b> 연구자 플랫폼 이용 가이드 입니다.</h1>
+    </div>
+    <div class='sub_ment'>
+
+    </div>
+    <div class='sys_info'>
+        <h3>
+            <span class="material-symbols-outlined">
+                format_quote
+            </span>
+            시스템 이용 가이드
+            <span class="material-symbols-outlined">
+                format_quote
+            </span>
+        </h3>
+    </div>
+    <div  class="img_main" style="border-bottom:0;margin-top:0;">
+        <img src="{% static 'img/guide.png' %}" style="width:100%; margin:auto;">
+    </div>
+    <div  class="img_main" style="border-top:0;">
+        <img src="{% static 'img/guide2.png' %}" style="width:100%; margin:auto;">
+    </div>
+</main>
+
+{% endblock %}

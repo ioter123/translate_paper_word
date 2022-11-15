@@ -22,16 +22,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-EMAIL = {
-    'EMAIL_BACKEND'      :'django.core.mail.backends.smtp.EmailBackend',
-    'EMAIL_USE_TLS'      : True,
-    'EMAIL_PORT'         : 587,
-    'EMAIL_HOST'         : 'smtp.gmail.com',
-    'EMAIL_HOST_USER'    : 'haibdmedia@gmail.com',
-    'EMAIL_HOST_PASSWORD': 'yalqdsdamtoectwn',
-    'SERVER_EMAIL'       : 'haibdmedia',
-}
-
 
 import json, os
 from django.conf import settings
@@ -69,11 +59,16 @@ AUTH_USER_MODEL = "translateApp.User"
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
+#Django Session Timeout Code
+SESSION_COOKIE_AGE = 7200
+SESSION_SAVE_EVERY_REQUEST = True
+
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'hairesearcher.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'www.hairesearcher.com']
 
 
 # Application definition
@@ -175,13 +170,13 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = 'translateApp/static/'
+STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

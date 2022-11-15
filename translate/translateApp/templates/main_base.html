@@ -11,7 +11,7 @@
     <link rel="shortcut icon" href="{% static 'img/로고2.png' %}">
 
     <!-- JQuery -->
-    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
     {% block header %}
     {% endblock %}
     <!-- JQuery Cookie-->
@@ -416,8 +416,8 @@
           display : none;
           font-weight: 400;
           background-color: #fcfcfc;
-          min-width : 100%;
-          width:100%;
+          min-width : 98%;
+          width:98%;
           border-radius: 8px;
           box-shadow: 0px 0px 10px 3px rgba(190, 190, 190, 0.6);
 
@@ -456,7 +456,7 @@
           color : rgb(37, 37, 37);
           font-size: 12px;
           padding : 10px 10px;
-
+            width:95%;
         }
         .dropdown-content-tag div{
           display : block;
@@ -636,9 +636,22 @@
                             class="fas fa-user" style="margin:0 2.5px;"></i>&nbsp;&nbsp Writing Support System</a>
                     <ul class="collapse list-unstyled" id="homeSubmenu2">
                         <li>
+                            <a href="{% url 'guide' %}"><i class="fas fa-user-cog"></i>&nbsp;&nbsp;시스템 가이드</a>
+                        </li>
+                        <li>
                             <a href="{% url 'publicadministration' %}"><i class="fas fa-user-cog"></i>&nbsp;&nbsp;행정</a>
                         </li>
 
+                    </ul>
+                </li>
+                {% else %}
+                <li>
+                    <a href="#homeSubmenu2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle menu1"><i
+                            class="fas fa-user" style="margin:0 2.5px;"></i>&nbsp;&nbsp Writing Support System</a>
+                    <ul class="collapse list-unstyled" id="homeSubmenu2">
+                        <li>
+                            <a href="{% url 'guide' %}"><i class="fas fa-user-cog"></i>&nbsp;&nbsp;시스템 가이드</a>
+                        </li>
                     </ul>
                 </li>
                 {% endif %}
@@ -647,18 +660,49 @@
             </ul>
 
             <!--사이드바 FOOTER-->
-            <!--
             <div class="footer" style="position: fixed; bottom: 0; margin-left:-7px;">
-                <p class="copyrightFooter">
+                {% if user.is_authenticated %}
+                <p class="copyrightFooter">자동 로그아웃 시간 : </p>
+                <p class="copyrightFooter" id ='session_timer'>
+                    <script>
+                        const countDownTimer = function (id, date) {
+                    		var _vDate = new Date(date); // 전달 받은 일자
+                    		var _second = 1000;
+                    		var _minute = _second * 60;
+                    		var _hour = _minute * 60;
+                    		var _day = _hour * 24;
+                    		var timer;
 
-                    Copyright &copy;<script>
-                        document.write(new Date().getFullYear());
-                    </script>All rights<br>reserved | This service is made with<br><i class="icon-heart"
-                        aria-hidden="true"></i> by <a href="https://haibdm.com" target="_blank">haibm.com</a>
-                    &nbsp;&&nbsp;<a href="" target="_blank">(주)하이빅데이터미디어</a>
+                    		function showRemaining() {
+                    			var now = new Date();
+                    			var distDt = _vDate - now;
+                                //console.log(now);
+                    			if (distDt < 0) {
+                    				clearInterval(timer);
+                    				document.getElementById(id).textContent = '해당 이벤트가 종료 되었습니다!';
+                    				return;
+                    			}
+
+                    			var days = Math.floor(distDt / _day);
+                    			var hours = Math.floor((distDt % _day) / _hour);
+                    			var minutes = Math.floor((distDt % _hour) / _minute);
+                    			var seconds = Math.floor((distDt % _minute) / _second);
+
+                    			//document.getElementById(id).textContent = date.toLocaleString() + "까지 : ";
+                    			//document.getElementById(id).textContent = days + '일 ';
+                    			document.getElementById(id).textContent = hours + '시간 ';
+                    			document.getElementById(id).textContent += minutes + '분 ';
+                    			document.getElementById(id).textContent += seconds + '초';
+                    		}
+
+                    		timer = setInterval(showRemaining, 1000);
+                    	}
+                        console.log("{{expiry_date|safe}}");
+                    	countDownTimer('session_timer', '{{expiry_date|safe}}');
+                    </script>
                 </p>
+                {% endif %}
             </div>
-            -->
         </div>
     </nav>
     <div class="wrapper d-flex align-items-stretch" id="in_box">
@@ -681,7 +725,7 @@
                     </button> -->
 
                     <div class="collapse navbar-collapse show" id="navbarSupportedContent">
-                        <a href="/main" style="margin-left:40px;"><img src="{% static 'img/로고.png' %}" style="width:200px; margin:5px;" id="logo_ing"></a>
+                        <a href="{% url 'main'%}" style="margin-left:40px;"><img src="{% static 'img/로고.png' %}" style="width:200px; margin:5px;" id="logo_ing"></a>
                         <!--<ul class="nav navbar-nav ml-auto">
                             &lt;!&ndash; <li class="nav-item active"> &ndash;&gt;
                             <li class="nav-item">
@@ -702,7 +746,7 @@
         <div class="footer-left">
             <p class="footer-company-name">(주)하이빅데이터미디어</p>
             <p class="footer-company-info">대표 : 유한별  |  연락처 : 0507-1403-8911</p>
-            <p class="footer-company-info">이사 : 김진우  |  감사 : 나태준  |  사외이사 : 한세억</p>
+            <p class="footer-company-info">이사 : 김진우, 유한길  |  감사 : 나태준  |  사외이사 : 한세억</p>
             <p class="footer-company-info">주소 : 경기도 남양주시 순화궁로 249 파라곤스퀘어 M동 M1927호</p>
             <p></p>
             <p class="footer-company-info">e-mail : haibdmedia@gmail.com</p>

@@ -208,6 +208,38 @@ class CustomUserChangeForm(UserChangeForm):
         attrs={'class': 'form-control', }),
                            )
 
+    class Meta:
+        model = User()
+        fields = ['name', 'phone', 'interest', 'belong', 'rank', 'bachelor', 'master', 'doctor']
+
+
+class AdminUserChangeForm(UserChangeForm):
+    password = None
+    phone = forms.CharField(label='연락처', widget=forms.TextInput(
+        attrs={'class': 'form-control', 'maxlength':'11', 'oninput':"maxLengthCheck(this)",}),
+    )
+    name = forms.CharField(label='이름', widget=forms.TextInput(
+        attrs={'class': 'form-control', }),
+    )
+    interest = forms.CharField(label='관심 분야', widget=forms.TextInput(
+        attrs={'class': 'form-control', }),
+    )
+    belong = forms.CharField(label='소속', widget=forms.TextInput(
+        attrs={'class': 'form-control',}),
+    )
+    rank = forms.CharField(label='직위', widget=forms.TextInput(
+        attrs={'class': 'form-control',}),
+    )
+    bachelor = forms.CharField(label='학사', widget=forms.TextInput(
+        attrs={'class': 'form-control', }),
+                           )
+    master = forms.CharField(label='석사', widget=forms.TextInput(
+        attrs={'class': 'form-control', }),
+                           )
+    doctor = forms.CharField(label='박사', widget=forms.TextInput(
+        attrs={'class': 'form-control', }),
+                           )
+
     is_admin = forms.BooleanField(label='관리자 유무', widget=forms.CheckboxInput(
         attrs={'class': 'form-control', }),
                              )

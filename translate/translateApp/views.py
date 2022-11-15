@@ -46,18 +46,47 @@ from .helper import email_auth_num
 from django.contrib.auth import update_session_auth_hash
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
+from datetime import datetime
 EMAIL = getattr(settings, 'EMAIL', None)
 SECRET_KEY = getattr(settings, 'SECRET_KEY', None)
 nltk.download('punkt')
 
 
 def main(request):
-    return render(request, 'main.html')
+    expiry_date = request.session.get_expiry_date()
+    format = '%Y/%m/%d %H:%M:%S'
+    expiry_date = expiry_date.strftime(format)
+    return render(request, 'main.html', {'expiry_date' : expiry_date})
+
+
+def guide(request):
+    expiry_date = request.session.get_expiry_date()
+    format = '%Y/%m/%d %H:%M:%S'
+    expiry_date = expiry_date.strftime(format)
+    return render(request, 'guide.html', {'expiry_date' : expiry_date})
 
 
 @login_message_required
 def publicadministration(request):
+    expiry_date = request.session.get_expiry_date()
+    format = '%Y/%m/%d %H:%M:%S'
+    expiry_date = expiry_date.strftime(format)
     if request.method == 'POST':
+        sentence_ids = request.POST.getlist('sentence_id')
+        print(sentence_ids)
+        for id in sentence_ids:
+            print(id)
+            try:
+                error_sentence = request.POST[id]
+                if error_sentence == 'True':
+                    paperdb = PaperDB.objects.filter(id=int(id))
+                    for paper in paperdb:
+                        paper.error_sentence = True
+                        paper.save()
+            except:
+                pass
+
+
 
         # 입력값
         startWord = request.POST['startWord']
@@ -67,7 +96,7 @@ def publicadministration(request):
 
         # 입력값이 비어있는 경우
         if startWord=="":
-            return render(request, 'publicadministration.html', {'startWord': new_startWord, 'transWord': "", 'tag1': ""})
+            return render(request, 'publicadministration.html', {'startWord': new_startWord, 'transWord': "", 'tag1': "", 'expiry_date' : expiry_date})
 
         # 파파고 번역 실행
         #papago_word = papago_translate.papago_translate(new_startWord)
@@ -84,7 +113,7 @@ def publicadministration(request):
         transWords = []
         zeroWords = []
         for word in filtered_word:
-            temp = list(PaperDB.objects.filter(sentence__icontains=word[0]).values())
+            temp = list(PaperDB.objects.filter(sentence__icontains=word[0], error_sentence = False).values())
             if len(temp) != 0:
                 temp.sort(key=lambda x : x['date'], reverse=True)
                 transWords.append({'word': word[0], 'syn_word': '', 'count':len(temp), 'sentence':temp[:10], 'tag': word[1], 'syn_search':'no'})
@@ -106,16 +135,25 @@ def publicadministration(request):
         transWords.sort(key=lambda x : x['count'], reverse=True)
 
         tag1 = list(set([word['tag'] for word in transWords]))
-        return render(request, 'publicadministration.html', {'startWord': new_startWord, 'transWords': transWords, 'tag1': tag1})
+        return render(request, 'publicadministration.html', {'startWord': new_startWord, 'transWords': transWords, 'tag1': tag1, 'expiry_date' : expiry_date})
 
-    return render(request, 'publicadministration.html', {'startWord': "", 'transWord': "", 'tag1': ""})
+    return render(request, 'publicadministration.html', {'startWord': "", 'transWord': "", 'tag1': "", 'expiry_date' : expiry_date})
+
+
+def reload_paper(request):
+    sentence_id = request.POST['sentence_id']
+
+    paperdb = PaperDB.object.get(id=sentence_id)
+    paperdb.error_sentence = error_sentence
+    paperdb.save()
+    return redirect('publicadministration')
 
 
 def paperDBInsert(request):
     PaperDB.objects.all().delete()
     BASE_DIR = Path(__file__).resolve().parent.parent
     #print(BASE_DIR)
-    path_dir = str(BASE_DIR)+'\\sentence_jpart.xlsx'
+    path_dir = str(BASE_DIR)+'/sentence_jpart.xlsx'
     sentences = pd.read_excel(path_dir)
 
     for i in range(sentences.shape[0]):
@@ -138,7 +176,7 @@ def research_part_insert(request):
     Researchpart.objects.all().delete()
     BASE_DIR = Path(__file__).resolve().parent.parent
     # print(BASE_DIR)
-    path_dir = str(BASE_DIR) + '\\연구분야 분류.xlsx'
+    path_dir = str(BASE_DIR) + '/연구분야 분류.xlsx'
     part = pd.read_excel(path_dir)
 
     for i in range(part.shape[0]):
@@ -238,7 +276,7 @@ def activate(request, uid64, token):
 class LoginView(FormView):
     template_name = 'user_login.html'
     form_class = LoginForm
-    success_url = '/index/'
+    success_url = '/'
 
     def form_valid(self, form):
         email = form.cleaned_data.get("email")
@@ -353,20 +391,27 @@ def auth_pw_reset_view(request):
 
 @login_message_required
 def profile_view(request):
+    expiry_date = request.session.get_expiry_date()
+    format = '%Y/%m/%d %H:%M:%S'
+    expiry_date = expiry_date.strftime(format)
     if request.method == 'GET':
-        return render(request, 'profile.html')
+        return render(request, 'profile.html', {'expiry_date' : expiry_date})
 
 
 @login_message_required
 def profile_update_view(request):
+    expiry_date = request.session.get_expiry_date()
+    format = '%Y/%m/%d %H:%M:%S'
+    expiry_date = expiry_date.strftime(format)
     if request.method == 'POST':
         request.user.bachelor = '/'.join(request.POST.getlist('bachelor1'))
         request.user.master = '/'.join(request.POST.getlist('master1'))
         request.user.doctor = '/'.join(request.POST.getlist('doctor1'))
-
+        print(request.POST)
+        print(request.user)
         user_change_form = CustomUserChangeForm(request.POST, instance=request.user)
         if user_change_form.is_valid():
-            form = user_change_form.save(commit=False)
+            form = user_change_form.save(commit=True)
             form.save()
             messages.success(request, '회원정보가 수정되었습니다.')
             return redirect('profile')
@@ -374,11 +419,14 @@ def profile_update_view(request):
     else:
         user_change_form = CustomUserChangeForm(instance=request.user)
         part = Researchpart.objects.all()
-        return render(request, 'profile_update.html', {'user_change_form':user_change_form, 'part': part.values()})
+        return render(request, 'profile_update.html', {'user_change_form':user_change_form, 'part': part.values(), 'expiry_date' : expiry_date})
 
 
 @login_message_required
 def password_edit_view(request):
+    expiry_date = request.session.get_expiry_date()
+    format = '%Y/%m/%d %H:%M:%S'
+    expiry_date = expiry_date.strftime(format)
     if request.method == 'POST':
         password_change_form = CustomPasswordChangeForm(request.user, request.POST)
         if password_change_form.is_valid():
@@ -389,11 +437,14 @@ def password_edit_view(request):
     else:
         password_change_form = CustomPasswordChangeForm(request.user)
 
-    return render(request, 'profile_password.html', {'password_change_form':password_change_form})
+    return render(request, 'profile_password.html', {'password_change_form':password_change_form, 'expiry_date' : expiry_date})
 
 
 @login_message_required
 def profile_delete_view(request):
+    expiry_date = request.session.get_expiry_date()
+    format = '%Y/%m/%d %H:%M:%S'
+    expiry_date = expiry_date.strftime(format)
     if request.method == 'POST':
         password_form = CheckPasswordForm(request.user, request.POST)
 
@@ -405,7 +456,7 @@ def profile_delete_view(request):
     else:
         password_form = CheckPasswordForm(request.user)
 
-    return render(request, 'profile_delete.html', {'password_form': password_form})
+    return render(request, 'profile_delete.html', {'password_form': password_form, 'expiry_date' : expiry_date})
 
 
 @method_decorator(admin_required, name='dispatch')
@@ -482,7 +533,7 @@ def user_edit_view(request, pk):
     user = User.objects.get(id=pk)
 
     if request.method == "POST":
-        form = CustomUserChangeForm(request.POST, instance=user)
+        form = AdminUserChangeForm(request.POST, instance=user)
         if form.is_valid():
             user = form.save(commit=False)
             user.save()
@@ -490,10 +541,12 @@ def user_edit_view(request, pk):
             return redirect('/user_list/' + str(pk))
     else:
         user = User.objects.get(id=pk)
-        form = CustomUserChangeForm(instance=user)
+        form = AdminUserChangeForm(instance=user)
+        part = Researchpart.objects.all()
         context = {
             'user_change_form': form,
             'edit': '수정하기',
+            'part': part.values()
         }
         return render(request, "user_edit.html", context)
 
